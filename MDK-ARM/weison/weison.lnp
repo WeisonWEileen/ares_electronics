@@ -1,0 +1,28 @@
+--cpu=Cortex-M4.fp.sp
+"weison\startup_stm32f407xx.o"
+"weison\main.o"
+"weison\gpio.o"
+"weison\can.o"
+"weison\stm32f4xx_it.o"
+"weison\stm32f4xx_hal_msp.o"
+"weison\stm32f4xx_hal_can.o"
+"weison\stm32f4xx_hal_rcc.o"
+"weison\stm32f4xx_hal_rcc_ex.o"
+"weison\stm32f4xx_hal_flash.o"
+"weison\stm32f4xx_hal_flash_ex.o"
+"weison\stm32f4xx_hal_flash_ramfunc.o"
+"weison\stm32f4xx_hal_gpio.o"
+"weison\stm32f4xx_hal_dma_ex.o"
+"weison\stm32f4xx_hal_dma.o"
+"weison\stm32f4xx_hal_pwr.o"
+"weison\stm32f4xx_hal_pwr_ex.o"
+"weison\stm32f4xx_hal_cortex.o"
+"weison\stm32f4xx_hal.o"
+"weison\stm32f4xx_hal_exti.o"
+"weison\stm32f4xx_hal_tim.o"
+"weison\stm32f4xx_hal_tim_ex.o"
+"weison\system_stm32f4xx.o"
+--strict --scatter "weison\weison.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "weison.map" -o weison\weison.axf
