@@ -52,6 +52,7 @@ osThreadId motor_TaskHandle;
 osThreadId defaultTaskHandle;
 osThreadId LED_Task_BlueHandle;
 osThreadId motor_ang_taskHandle;
+osThreadId imu_read_TaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -61,6 +62,7 @@ extern void LED_Green_Task(void const *argument);
 void StartDefaultTask(void const * argument);
 extern void LED_Blue_Task(void const * argument);
 extern void MotorTask(void const * argument);
+void Imu_read_Task(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -116,8 +118,12 @@ void MX_FREERTOS_Init(void) {
   LED_Task_BlueHandle = osThreadCreate(osThread(LED_Task_Blue), NULL);
 
   /* definition and creation of motor_ang_task */
-  osThreadDef(motor_ang_task, MotorTask, osPriorityHigh, 0, 128);
+  osThreadDef(motor_ang_task, MotorTask, osPriorityNormal, 0, 128);
   motor_ang_taskHandle = osThreadCreate(osThread(motor_ang_task), NULL);
+
+  /* definition and creation of imu_read_Task */
+  osThreadDef(imu_read_Task, Imu_read_Task, osPriorityAboveNormal, 0, 128);
+  imu_read_TaskHandle = osThreadCreate(osThread(imu_read_Task), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -144,6 +150,24 @@ void StartDefaultTask(void const * argument)
     // osDelay(1);
   }
   /* USER CODE END StartDefaultTask */
+}
+
+/* USER CODE BEGIN Header_Imu_read_Task */
+/**
+* @brief Function implementing the imu_read_Task thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_Imu_read_Task */
+__weak void Imu_read_Task(void const * argument)
+{
+  /* USER CODE BEGIN Imu_read_Task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END Imu_read_Task */
 }
 
 /* Private application code --------------------------------------------------*/

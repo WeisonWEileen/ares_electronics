@@ -40,6 +40,7 @@ Core/Src/can.c \
 Core/Src/freertos.c \
 Core/Src/gpio.c \
 Core/Src/main.c \
+Core/Src/spi.c \
 Core/Src/stm32f4xx_hal_msp.c \
 Core/Src/stm32f4xx_hal_timebase_tim.c \
 Core/Src/stm32f4xx_it.c \
@@ -49,6 +50,7 @@ Core/application/CAN_receive.c \
 Core/application/LED_Task.c \
 Core/application/MotorTask.c \
 Core/application/UsartTask.c \
+Core/application/imu_read.c \
 Core/application/pid.c \
 Core/bsp/boards/bsp_can.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
@@ -65,6 +67,7 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
@@ -77,7 +80,9 @@ Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c \
 Middlewares/Third_Party/FreeRTOS/Source/queue.c \
 Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c \
 Middlewares/Third_Party/FreeRTOS/Source/tasks.c \
-Middlewares/Third_Party/FreeRTOS/Source/timers.c
+Middlewares/Third_Party/FreeRTOS/Source/timers.c \
+component/devices/BMI088Middleware.c \
+component/devices/BMI088driver.c
 
 
 CPP_SOURCES = \
@@ -158,7 +163,8 @@ C_INCLUDES =  \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS \
 -IMiddlewares/Third_Party/FreeRTOS/Source/include \
--IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F
+-IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
+-Icomponent/devices
 
 
 

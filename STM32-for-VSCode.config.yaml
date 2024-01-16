@@ -77,6 +77,7 @@ includeDirectories:
   - Core/Lib/**
   - Core/application/**
   - Core/bsp/boards/**
+  - component/devices/**
 
 
 # Files that should be included in the compilation.
@@ -90,7 +91,7 @@ sourceFiles:
   - Core/Lib/**
   - Core/application/**
   - Core/bsp/boards/**
-
+  - component/devices/**
 
 # When no makefile is present it will show a warning pop-up.
 # However when compilation without the CubeMX Makefile is desired, this can be turned of.

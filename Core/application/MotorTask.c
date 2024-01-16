@@ -19,7 +19,7 @@ void MotorTask(void const *argument)
 
     while(1){
         motor_3508.given_current = PID_calc(&motor_3508.pid, motor_3508.realRpm, motor_3508.desireRpm);
-        CAN_cmd_chassis(motor_3508.given_current, 0, 0, 0);
+        // CAN_cmd_chassis(motor_3508.given_current, 0, 0, 0);
         vTaskDelay(1);
     }
 }
@@ -31,7 +31,7 @@ void MotorTask(void const *argument)
 void motor_data_init(void)
 {
     // 给电机3000的目标转速
-    motor_3508.desireRpm =  6000;  
+    motor_3508.desireRpm =  0;  
     motor_3508.realRpm = 0;
 
     const fp32 pos_pid_3508[3] = {0.5, 0.5, 0.5};
