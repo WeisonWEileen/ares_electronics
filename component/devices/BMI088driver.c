@@ -26,12 +26,12 @@ fp32 BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
     }
 //#define BMI088_accel_write_muli_reg( reg,  data, len) { BMI088_ACCEL_NS_L(); BMI088_write_muli_reg(reg, data, len); BMI088_ACCEL_NS_H(); }
 //totally TransmitReceive fot 2 times, one in read_write_byte, one in read_muli_reg
-#define BMI088_accel_read_muli_reg(reg, data, len) \
-    {                                              \
-        BMI088_ACCEL_NS_L();                       \
-        BMI088_test_only_Receive((reg) | 0x80);    \
-        BMI088_read_muli_reg(reg, data, len);      \
-        BMI088_ACCEL_NS_H();                       \
+#define BMI088_accel_read_muli_reg(reg, data, len)              \
+    {                                                           \
+        BMI088_ACCEL_NS_L();                                    \
+        BMI088_test_only_Receive((reg) | BMI088_SPI_READ_CODE); \
+        BMI088_read_muli_reg(reg, data, len);                   \
+        BMI088_ACCEL_NS_H();                                    \
     }
 
 #define BMI088_gyro_write_single_reg(reg, data) \
@@ -260,8 +260,8 @@ static void BMI088_read_single_reg(uint8_t reg, uint8_t *return_data)
 
 static void BMI088_read_muli_reg(uint8_t reg, uint8_t *buf, uint8_t len)
 {
-    BMI088_read_write_byte(reg | 0x80); // 参数是位运算得到的寄存器地址
-                                        //  SPI中的读取/写入位
+    BMI088_read_write_byte(reg | BMI088_SPI_READ_CODE); // 参数是位运算得到的寄存器地址
+                                                        //  SPI中的读取/写入位
     while (len != 0)
     {
 
