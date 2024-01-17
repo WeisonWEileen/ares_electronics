@@ -26,12 +26,12 @@ fp32 BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
     }
 //#define BMI088_accel_write_muli_reg( reg,  data, len) { BMI088_ACCEL_NS_L(); BMI088_write_muli_reg(reg, data, len); BMI088_ACCEL_NS_H(); }
 //totally TransmitReceive fot 2 times, one in read_write_byte, one in read_muli_reg
-#define BMI088_accel_read_muli_reg(reg, data, len)              \
-    {                                                           \
-        BMI088_ACCEL_NS_L();                                    \
-        BMI088_test_only_Receive((reg) | BMI088_SPI_READ_CODE); \
-        BMI088_read_muli_reg(reg, data, len);                   \
-        BMI088_ACCEL_NS_H();                                    \
+#define BMI088_accel_read_muli_reg(reg, data, len) \
+    {                                              \
+        BMI088_ACCEL_NS_L();                       \
+        BMI088_read_write_byte((reg) | 0x80);      \
+        BMI088_read_muli_reg(reg, data, len);      \
+        BMI088_ACCEL_NS_H();                       \
     }
 
 #define BMI088_gyro_write_single_reg(reg, data) \

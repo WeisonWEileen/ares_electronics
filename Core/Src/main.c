@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include "bsp_can.h"
 #include "CAN_receive.h"
+#include "BMI088driver.h"
 // #include "MotorTask."
 /* USER CODE END Includes */
 
@@ -100,6 +101,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
   can_filter_init();
   /* USER CODE END 2 */
+
+  while(BMI088_init())
+  {
+     ;
+  }
 
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();
