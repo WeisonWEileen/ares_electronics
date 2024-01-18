@@ -1,6 +1,7 @@
 #include "BMI088driver.h"
 #include "BMI088reg.h"
 #include "BMI088Middleware.h"
+// #include "cmsis_os.h"
 
 
 fp32 BMI088_ACCEL_SEN = BMI088_ACCEL_3G_SEN;
@@ -64,6 +65,7 @@ static void BMI088_read_muli_reg(uint8_t reg, uint8_t *buf, uint8_t len);
 
 #endif
 
+// BMI088初始化配置数组for accel,第一列为reg地址,第二列为写入的配置值,第三列为错误码(如果出错)
 static uint8_t write_BMI088_accel_reg_data_error[BMI088_WRITE_ACCEL_REG_NUM][3] =
     {
         {BMI088_ACC_PWR_CTRL, BMI088_ACC_ENABLE_ACC_ON, BMI088_ACC_PWR_CTRL_ERROR},
@@ -75,6 +77,7 @@ static uint8_t write_BMI088_accel_reg_data_error[BMI088_WRITE_ACCEL_REG_NUM][3] 
 
 };
 
+// BMI088初始化配置数组for gyro,第一列为reg地址,第二列为写入的配置值,第三列为错误码(如果出错)
 static uint8_t write_BMI088_gyro_reg_data_error[BMI088_WRITE_GYRO_REG_NUM][3] =
     {
         {BMI088_GYRO_RANGE, BMI088_GYRO_2000, BMI088_GYRO_RANGE_ERROR},
@@ -106,19 +109,24 @@ bool_t bmi088_accel_init(void)
 
     //check commiunication
     BMI088_accel_read_single_reg(BMI088_ACC_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    vTaskDelay(10);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
     BMI088_accel_read_single_reg(BMI088_ACC_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    vTaskDelay(10);
+    //BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
     //accel software reset
     BMI088_accel_write_single_reg(BMI088_ACC_SOFTRESET, BMI088_ACC_SOFTRESET_VALUE);
-    BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
+    vTaskDelay(10);
+    // BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
 
     //check commiunication is normal after reset
     BMI088_accel_read_single_reg(BMI088_ACC_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    vTaskDelay(10);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
     BMI088_accel_read_single_reg(BMI088_ACC_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    vTaskDelay(10);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
     // check the "who am I"
     if (res != BMI088_ACC_CHIP_ID_VALUE)
@@ -131,10 +139,12 @@ bool_t bmi088_accel_init(void)
     {
 
         BMI088_accel_write_single_reg(write_BMI088_accel_reg_data_error[write_reg_num][0], write_BMI088_accel_reg_data_error[write_reg_num][1]);
-        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        vTaskDelay(10);
+        // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
         BMI088_accel_read_single_reg(write_BMI088_accel_reg_data_error[write_reg_num][0], res);
-        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        vTaskDelay(10);
+        // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
         if (res != write_BMI088_accel_reg_data_error[write_reg_num][1])
         {
@@ -151,18 +161,23 @@ bool_t bmi088_gyro_init(void)
 
     //check commiunication
     BMI088_gyro_read_single_reg(BMI088_GYRO_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    vTaskDelay(10);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
     BMI088_gyro_read_single_reg(BMI088_GYRO_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    vTaskDelay(10);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
     //reset the gyro sensor
     BMI088_gyro_write_single_reg(BMI088_GYRO_SOFTRESET, BMI088_GYRO_SOFTRESET_VALUE);
-    BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
+    vTaskDelay(10);
+    // BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
     //check commiunication is normal after reset
     BMI088_gyro_read_single_reg(BMI088_GYRO_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    vTaskDelay(10);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
     BMI088_gyro_read_single_reg(BMI088_GYRO_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    vTaskDelay(10);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
     // check the "who am I"
     if (res != BMI088_GYRO_CHIP_ID_VALUE)
@@ -175,10 +190,12 @@ bool_t bmi088_gyro_init(void)
     {
 
         BMI088_gyro_write_single_reg(write_BMI088_gyro_reg_data_error[write_reg_num][0], write_BMI088_gyro_reg_data_error[write_reg_num][1]);
-        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        vTaskDelay(10);
+        // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
         BMI088_gyro_read_single_reg(write_BMI088_gyro_reg_data_error[write_reg_num][0], res);
-        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        vTaskDelay(10);
+        //BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
         if (res != write_BMI088_gyro_reg_data_error[write_reg_num][1])
         {

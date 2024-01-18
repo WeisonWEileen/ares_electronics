@@ -114,7 +114,7 @@ void MX_FREERTOS_Init(void) {
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of LED_Task_Blue */
-  osThreadDef(LED_Task_Blue, LED_Blue_Task, osPriorityNormal, 0, 128);
+  osThreadDef(LED_Task_Blue, LED_Blue_Task, osPriorityAboveNormal, 0, 128);
   LED_Task_BlueHandle = osThreadCreate(osThread(LED_Task_Blue), NULL);
 
   /* definition and creation of motor_ang_task */
@@ -128,7 +128,10 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
 
-
+  /*删除现在没有用的任务*/
+  vTaskDelete(defaultTaskHandle);
+  // vTaskSuspend(LED_Task_BlueHandle);
+  vTaskSuspend(motor_ang_taskHandle);
 
   /* USER CODE END RTOS_THREADS */
 
