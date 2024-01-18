@@ -14,6 +14,10 @@
 #define BMI088_ACCEL_DRDY_SHFITS 0x7
 #define BMI088_ACCEL_DRDY (1 << BMI088_ACCEL_DRDY_SHFITS)
 
+/*-----bmi088的spi读取协议部分-----*/
+#define BMI088_SPI_WRITE_CODE 0x7F
+#define BMI088_SPI_READ_CODE 0x80
+
 /*-----加速度计寄存器表-----*/
 #define BMI088_ACCEL_XOUT_L 0x12
 #define BMI088_ACCEL_XOUT_M 0x13

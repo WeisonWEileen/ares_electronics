@@ -100,12 +100,12 @@ int main(void)
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   can_filter_init();
-  /* USER CODE END 2 */
 
-  while(BMI088_init())
+  while (BMI088_init())
   {
-     ;
+    ;
   }
+  /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
   MX_FREERTOS_Init();

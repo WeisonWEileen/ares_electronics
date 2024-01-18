@@ -1,5 +1,6 @@
 #include "BMI088Middleware.h"
 #include "main.h"
+#include "cmsis_os.h"
 
 extern SPI_HandleTypeDef hspi1;
 
@@ -25,6 +26,7 @@ void BMI088_delay_ms(uint16_t ms)
 void BMI088_delay_us(uint16_t us)
 {
 
+    vTaskDelay(1000 *us);
     uint32_t ticks = 0;
     uint32_t told = 0;
     uint32_t tnow = 0;
