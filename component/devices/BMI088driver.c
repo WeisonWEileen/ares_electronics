@@ -1,7 +1,7 @@
 #include "BMI088driver.h"
 #include "BMI088reg.h"
 #include "BMI088Middleware.h"
-// #include "cmsis_os.h"
+#include "cmsis_os.h"
 
 
 fp32 BMI088_ACCEL_SEN = BMI088_ACCEL_3G_SEN;
