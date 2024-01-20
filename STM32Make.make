@@ -52,7 +52,8 @@ Core/application/MotorTask.c \
 Core/application/UsartTask.c \
 Core/application/imu_read.c \
 Core/application/pid.c \
-Core/bsp/boards/bsp_can.c \
+Core/bsp/boards/can/bsp_can.c \
+Core/bsp/boards/log/bsp_log.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c \
@@ -81,6 +82,8 @@ Middlewares/Third_Party/FreeRTOS/Source/queue.c \
 Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c \
 Middlewares/Third_Party/FreeRTOS/Source/tasks.c \
 Middlewares/Third_Party/FreeRTOS/Source/timers.c \
+Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT.c \
+Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT_printf.c \
 component/devices/BMI088Middleware.c \
 component/devices/BMI088driver.c
 
@@ -90,6 +93,7 @@ CPP_SOURCES = \
 
 # ASM sources
 ASM_SOURCES =  \
+Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT_ASM_ARMv7M.S \
 startup_stm32f407xx.s
 
 
@@ -156,7 +160,8 @@ AS_INCLUDES = \
 C_INCLUDES =  \
 -ICore/Inc \
 -ICore/application \
--ICore/bsp/boards \
+-ICore/bsp/boards/can \
+-ICore/bsp/boards/log \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \
@@ -164,6 +169,7 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS \
 -IMiddlewares/Third_Party/FreeRTOS/Source/include \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
+-IMiddlewares/Third_Party/SEGGER/RTT \
 -Icomponent/devices
 
 

@@ -110,19 +110,24 @@ bool_t bmi088_accel_init(void)
     // 计算机对16进制的寄存器地址先转换为2进制，进行或运算，才能读取数据
     // 实际上就是将第一位置为1，其它位不变
     BMI088_accel_read_single_reg(BMI088_ACC_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+    //BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
     BMI088_accel_read_single_reg(BMI088_ACC_CHIP_ID, res)
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
     // accel software reset
     BMI088_accel_write_single_reg(BMI088_ACC_SOFTRESET, BMI088_ACC_SOFTRESET_VALUE);
-    BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
+    HAL_Delay(BMI088_LONG_DELAY_TIME);
+    // BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
 
     // check commiunication is normal after reset
     BMI088_accel_read_single_reg(BMI088_ACC_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
     BMI088_accel_read_single_reg(BMI088_ACC_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
     // check the "who am I"
     if (res != BMI088_ACC_CHIP_ID_VALUE)
@@ -135,10 +140,12 @@ bool_t bmi088_accel_init(void)
     {
 
         BMI088_accel_write_single_reg(write_BMI088_accel_reg_data_error[write_reg_num][0], write_BMI088_accel_reg_data_error[write_reg_num][1]);
-        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+        // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
         BMI088_accel_read_single_reg(write_BMI088_accel_reg_data_error[write_reg_num][0], res);
-        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+        // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
         if (res != write_BMI088_accel_reg_data_error[write_reg_num][1])
         {
@@ -155,18 +162,23 @@ bool_t bmi088_gyro_init(void)
 
     // check commiunication
     BMI088_gyro_read_single_reg(BMI088_GYRO_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
     BMI088_gyro_read_single_reg(BMI088_GYRO_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
     // reset the gyro sensor
     BMI088_gyro_write_single_reg(BMI088_GYRO_SOFTRESET, BMI088_GYRO_SOFTRESET_VALUE);
-    BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
+    HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+    // BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
     // check commiunication is normal after reset
     BMI088_gyro_read_single_reg(BMI088_GYRO_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
     BMI088_gyro_read_single_reg(BMI088_GYRO_CHIP_ID, res);
-    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+    // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
     // check the "who am I"
     if (res != BMI088_GYRO_CHIP_ID_VALUE)
@@ -179,10 +191,12 @@ bool_t bmi088_gyro_init(void)
     {
 
         BMI088_gyro_write_single_reg(write_BMI088_gyro_reg_data_error[write_reg_num][0], write_BMI088_gyro_reg_data_error[write_reg_num][1]);
-        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+        // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
         BMI088_gyro_read_single_reg(write_BMI088_gyro_reg_data_error[write_reg_num][0], res);
-        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        HAL_Delay(BMI088_COM_WAIT_SENSOR_TIME);
+        // BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
 
         if (res != write_BMI088_gyro_reg_data_error[write_reg_num][1])
         {

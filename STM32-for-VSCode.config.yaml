@@ -76,8 +76,10 @@ includeDirectories:
   - Core/Src/**
   - Core/Lib/**
   - Core/application/**
-  - Core/bsp/boards/**
+  - Core/bsp/boards/can/**
+  - Core/bsp/boards/log/**
   - component/devices/**
+  - Middlewares/Third_Party/SEGGER/RTT/**
 
 
 # Files that should be included in the compilation.
@@ -90,8 +92,10 @@ sourceFiles:
   - Core/Src/**
   - Core/Lib/**
   - Core/application/**
-  - Core/bsp/boards/**
+  - Core/bsp/boards/can/** 
+  - Core/bsp/boards/log/**
   - component/devices/**
+  - Middlewares/Third_Party/SEGGER/RTT/**
 
 # When no makefile is present it will show a warning pop-up.
 # However when compilation without the CubeMX Makefile is desired, this can be turned of.

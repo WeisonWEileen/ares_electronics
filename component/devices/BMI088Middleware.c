@@ -23,10 +23,10 @@ void BMI088_delay_ms(uint16_t ms)
     }
 }
 
+
 void BMI088_delay_us(uint16_t us)
 {
-
-    vTaskDelay(1000 *us);
+    // vTaskDelay(1000 *us);
     uint32_t ticks = 0;
     uint32_t told = 0;
     uint32_t tnow = 0;
@@ -56,7 +56,6 @@ void BMI088_delay_us(uint16_t us)
         }
     }
 
-
 }
 
 
@@ -84,5 +83,7 @@ uint8_t BMI088_read_write_byte(uint8_t txdata)
 {
     uint8_t rx_data;
     HAL_SPI_TransmitReceive(&hspi1, &txdata, &rx_data, 1, 1000);
+    while (HAL_SPI_GetState(&hspi1) != HAL_SPI_STATE_READY)
+        ;
     return rx_data;
 }

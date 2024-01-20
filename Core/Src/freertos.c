@@ -130,8 +130,8 @@ void MX_FREERTOS_Init(void) {
 
   /*删除现在没有用的任务*/
   vTaskDelete(defaultTaskHandle);
+  vTaskDelete(motor_ang_taskHandle);
   // vTaskSuspend(LED_Task_BlueHandle);
-  vTaskSuspend(motor_ang_taskHandle);
 
   /* USER CODE END RTOS_THREADS */
 
