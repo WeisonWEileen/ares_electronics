@@ -21,6 +21,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "can.h"
+#include "dma.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
@@ -30,6 +31,7 @@
 #include "bsp_can.h"
 #include "CAN_receive.h"
 #include "BMI088driver.h"
+#include "remote.h"
 // #include "MotorTask."
 /* USER CODE END Includes */
 
@@ -95,11 +97,14 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_CAN1_Init();
   MX_USART1_UART_Init();
   MX_SPI1_Init();
+  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
   can_filter_init();
+  SBUS_IT_Open();
 
   while (BMI088_init())
   {

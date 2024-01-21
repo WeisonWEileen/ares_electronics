@@ -4,7 +4,7 @@
 #include "pid.h"
 #include "CAN_receive.h"
 
-motor_v_data_t motor_3508;   // 电机目标pid调控的数据
+motor_v_data_t motor_3508[2];   // 电机目标pid调控的数据
 
 
 /**
@@ -17,8 +17,9 @@ void MotorTask(void const *argument)
     vTaskDelay(200); //delay一下，让canReceive里面的数据先解算
     motor_data_init();
     while(1){
-        motor_3508.given_current = PID_calc(&motor_3508.pid, motor_3508.realRpm, motor_3508.desireRpm);
-        CAN_cmd_chassis(motor_3508.given_current, 0, 0, 0);
+        motor_3508[0].given_current = PID_calc(&motor_3508[0].pid, motor_3508[0].realRpm, motor_3508[0].desireRpm);
+        motor_3508[1].given_current = PID_calc(&motor_3508[1].pid, motor_3508[1].realRpm, motor_3508[1].desireRpm);
+        CAN_cmd_chassis(motor_3508[0].given_current, motor_3508[1].given_current, 0, 0);
         vTaskDelay(1);
     }
 }
@@ -30,11 +31,15 @@ void MotorTask(void const *argument)
 void motor_data_init(void)
 {
     // 给电机3000的目标转速
-    motor_3508.desireRpm =  3000;  
-    motor_3508.realRpm = 0;
+    motor_3508[0].desireRpm =  3000;  
+    motor_3508[0].realRpm = 0;
+    motor_3508[1].desireRpm = -3000;
+    motor_3508[1].realRpm = 0;
 
     const fp32 pos_pid_3508[3] = {0.5, 0.5, 0.5};
-    PID_init(&motor_3508.pid, PID_DELTA , pos_pid_3508, 16000, 200); // 初始化pid为差分PID模式
+    PID_init(&motor_3508[0].pid, PID_DELTA , pos_pid_3508, 16000, 200); // 初始化pid为差分PID模式
+    PID_init(&motor_3508[1].pid, PID_DELTA , pos_pid_3508, 16000, 200); // 初始化pid为差分PID模式
+
 }
 
 

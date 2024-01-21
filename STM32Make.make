@@ -37,6 +37,7 @@ BUILD_DIR = build
 # C sources
 C_SOURCES =  \
 Core/Src/can.c \
+Core/Src/dma.c \
 Core/Src/freertos.c \
 Core/Src/gpio.c \
 Core/Src/main.c \
@@ -54,6 +55,7 @@ Core/application/imu_read.c \
 Core/application/pid.c \
 Core/bsp/boards/can/bsp_can.c \
 Core/bsp/boards/log/bsp_log.c \
+Core/bsp/boards/remote/remote.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_can.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c \
@@ -93,7 +95,6 @@ CPP_SOURCES = \
 
 # ASM sources
 ASM_SOURCES =  \
-Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT_ASM_ARMv7M.S \
 startup_stm32f407xx.s
 
 
@@ -162,6 +163,7 @@ C_INCLUDES =  \
 -ICore/application \
 -ICore/bsp/boards/can \
 -ICore/bsp/boards/log \
+-ICore/bsp/boards/remote \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \

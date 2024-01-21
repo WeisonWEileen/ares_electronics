@@ -78,6 +78,7 @@ includeDirectories:
   - Core/application/**
   - Core/bsp/boards/can/**
   - Core/bsp/boards/log/**
+  - Core/bsp/boards/remote/**
   - component/devices/**
   - Middlewares/Third_Party/SEGGER/RTT/**
 
@@ -94,8 +95,10 @@ sourceFiles:
   - Core/application/**
   - Core/bsp/boards/can/** 
   - Core/bsp/boards/log/**
+  - Core/bsp/boards/remote/**
   - component/devices/**
-  - Middlewares/Third_Party/SEGGER/RTT/**
+  - Middlewares\Third_Party\SEGGER\RTT\SEGGER_RTT_printf.c
+  - Middlewares\Third_Party\SEGGER\RTT\SEGGER_RTT.c
 
 # When no makefile is present it will show a warning pop-up.
 # However when compilation without the CubeMX Makefile is desired, this can be turned of.

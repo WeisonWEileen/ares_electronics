@@ -25,7 +25,7 @@ extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
 // motor data read 拼接高八位和低八位
 
-extern motor_v_data_t motor_3508;  // 电机目标pid调控的数据，初始化在MotorTask.c里面
+extern motor_v_data_t motor_3508[2];  // 电机目标pid调控的数据，初始化在MotorTask.c里面
 
 
 #define get_motor_measure(ptr, data)                                     \
@@ -70,10 +70,10 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     if (hcan == &hcan1){
     switch (rx_header.StdId)
     {
-    case 0x201:
+    case CAN_3508_M1_ID:
     {
         get_motor_measure(&motor_chassis[0], rx_data);
-        motor_3508.realRpm = (float)motor_chassis[0].speed_rpm;
+        motor_3508[0].realRpm = (float)motor_chassis[0].speed_rpm;
 
         // //下面是调角度的东西
         // if ((motor1.ecd - motor1.last_ecd) > 4096)
@@ -89,7 +89,13 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         // // 但是我们需要的数据是rad/s （这里目前是错的，但是教程说和后面的代码有关，我先不改）
         // motor_3508.relative_speed = (float)motor1.speed_rpm / 8192 * 2 * PI / 19.02f;      
         break;
-    }   
+    }
+    case CAN_3508_M2_ID:
+    {
+        get_motor_measure(&motor_chassis[1], rx_data);
+        motor_3508[1].realRpm = (float)motor_chassis[1].speed_rpm;
+        break;
+    }
     default:
     {
         break;
