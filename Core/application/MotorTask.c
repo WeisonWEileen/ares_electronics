@@ -64,20 +64,20 @@ fp32 norm_rad_format(fp32 angle)
 }
 
 // 防止频繁按键
-bool_t motor_flag = 1;
-int key_delay = 1000;
+// bool_t motor_flag = 1;
+// int key_delay = 1000;
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-    if (GPIO_Pin == KEY_interrupt_Pin) // 按一次按键，motor_flag置1，开始一个pi/2的任务
-    {
-        if (key_delay == 0)
-        {
-            motor_flag = 1;
-            key_delay = 1000;
-        }
-    }
-}
+// void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
+// {
+//     if (GPIO_Pin == KEY_interrupt_Pin) // 按一次按键，motor_flag置1，开始一个pi/2的任务
+//     {
+//         if (key_delay == 0)
+//         {
+//             motor_flag = 1;
+//             key_delay = 1000;
+//         }
+//     }
+// }
 
 // void MotorTask(void const *argument)
 // {

@@ -46,18 +46,20 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-osThreadId LED_Task_BlueHandle;
-osThreadId motor_ang_taskHandle;
+osThreadId led_blue_TaskHandle;
+osThreadId motor_run_TaskHandle;
 osThreadId imu_read_TaskHandle;
-
+osThreadId adc_sample_TaskHandle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-void __attribute__((weak)) LED_Blue_Task(void const *argument);
-void __attribute__((weak)) MotorTask(void const *argument);
-void __attribute__((weak)) Imu_read_Task(void const *argument);
+__weak void LED_Blue_Task(void const *argument);
+__weak void MotorTask(void const *argument);
+__weak void Imu_read_Task(void const *argument);
+__weak void ADC_sample_Task(void const *argument);
+
 // extern void Imu_read_Task(void const *argument);
 // extern void MotorTask(void const *argument);
 /* USER CODE END FunctionPrototypes */
@@ -120,15 +122,20 @@ void MX_FREERTOS_Init(void) {
 
   /* definition and creation of LED_Task_Blue */
   osThreadDef(LED_Task_Blue, LED_Blue_Task, osPriorityNormal, 0, 128);
-  LED_Task_BlueHandle = osThreadCreate(osThread(LED_Task_Blue), NULL);
+  led_blue_TaskHandle = osThreadCreate(osThread(LED_Task_Blue), NULL);
 
   /* definition and creation of motor_ang_task */
   osThreadDef(motor_ang_task, MotorTask, osPriorityNormal, 0, 128);
-  motor_ang_taskHandle = osThreadCreate(osThread(motor_ang_task), NULL);
+  motor_run_TaskHandle = osThreadCreate(osThread(motor_ang_task), NULL);
 
   /* definition and creation of imu_read_Task */
   osThreadDef(imu_read_Task, Imu_read_Task, osPriorityNormal, 0, 128);
   imu_read_TaskHandle = osThreadCreate(osThread(imu_read_Task), NULL);
+
+  /* definition and creation of ADC_sample_Task */
+  osThreadDef(adc_sample_Task, ADC_sample_Task, osPriorityNormal, 0, 128);
+  adc_sample_TaskHandle = osThreadCreate(osThread(adc_sample_Task), NULL);
+
 
   /* USER CODE END RTOS_THREADS */
 
@@ -154,21 +161,28 @@ void StartDefaultTask(void const * argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-void __attribute__((weak)) LED_Blue_Task(void const *argument)
+__weak void LED_Blue_Task(void const *argument)
 {
   for (;;)
   {
     osDelay(1);
   }
 }
-void __attribute__((weak)) MotorTask(void const *argument)
+__weak void MotorTask(void const *argument)
 {
   for (;;)
   {
     osDelay(1);
   }
 }
-void __attribute__((weak)) Imu_read_Task(void const *argument)
+__weak void Imu_read_Task(void const *argument)
+{
+  for (;;)
+  {
+    osDelay(1);
+  }
+}
+__weak void ADC_sample_Task(void const *argument)
 {
   for (;;)
   {

@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "adc.h"
 #include "can.h"
 #include "dma.h"
 #include "spi.h"
@@ -32,6 +33,7 @@
 #include "CAN_receive.h"
 #include "BMI088driver.h"
 #include "remote.h"
+#include "adc_sample.h"
 // #include "MotorTask."
 /* USER CODE END Includes */
 
@@ -102,9 +104,12 @@ int main(void)
   MX_USART1_UART_Init();
   MX_SPI1_Init();
   MX_USART3_UART_Init();
+  MX_ADC3_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
   can_filter_init();
   SBUS_IT_Open();
+  init_vrefint_reciprocal();
 
   while (BMI088_init())
   {
