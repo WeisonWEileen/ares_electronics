@@ -111,10 +111,10 @@ int main(void)
   SBUS_IT_Open();
   init_vrefint_reciprocal();
 
-  while (BMI088_init())
-  {
-    ;
-  }
+  // while (BMI088_init())
+  // {
+  //   ;
+  // }
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

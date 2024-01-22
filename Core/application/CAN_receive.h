@@ -49,7 +49,7 @@ typedef struct
   __int16_t given_current; // 控制电流
   __uint8_t temperate;     // 电机温度
   __int16_t last_ecd;     // 上次的编码器值
-} motor_measure_t;
+} motor_raw_measure_t;
 
 /**
  * @brief          send control current of motor (0x205, 0x206, 0x207, 0x208)
@@ -109,42 +109,42 @@ extern void CAN_cmd_chassis(int16_t motor1, int16_t motor2, int16_t motor3, int1
  * @param[in]      none
  * @retval         电机数据指针
  */
-extern const motor_measure_t *get_yaw_gimbal_motor_measure_point(void);
+// extern const motor_measure_t *get_yaw_gimbal_motor_measure_point(void);
 
-/**
- * @brief          return the pitch 6020 motor data point
- * @param[in]      none
- * @retval         motor data point
- */
-/**
- * @brief          返回pitch 6020电机数据指针
- * @param[in]      none
- * @retval         电机数据指针
- */
-extern const motor_measure_t *get_pitch_gimbal_motor_measure_point(void);
+// /**
+//  * @brief          return the pitch 6020 motor data point
+//  * @param[in]      none
+//  * @retval         motor data point
+//  */
+// /**
+//  * @brief          返回pitch 6020电机数据指针
+//  * @param[in]      none
+//  * @retval         电机数据指针
+//  */
+// extern const motor_measure_t *get_pitch_gimbal_motor_measure_point(void);
 
-/**
- * @brief          return the trigger 2006 motor data point
- * @param[in]      none
- * @retval         motor data point
- */
-/**
- * @brief          返回拨弹电机 2006电机数据指针
- * @param[in]      none
- * @retval         电机数据指针
- */
-extern const motor_measure_t *get_trigger_motor_measure_point(void);
+// /**
+//  * @brief          return the trigger 2006 motor data point
+//  * @param[in]      none
+//  * @retval         motor data point
+//  */
+// /**
+//  * @brief          返回拨弹电机 2006电机数据指针
+//  * @param[in]      none
+//  * @retval         电机数据指针
+//  */
+// extern const motor_measure_t *get_trigger_motor_measure_point(void);
 
-/**
- * @brief          return the chassis 3508 motor data point
- * @param[in]      i: motor number,range [0,3]
- * @retval         motor data point
- */
-/**
- * @brief          返回底盘电机 3508电机数据指针
- * @param[in]      i: 电机编号,范围[0,3]
- * @retval         电机数据指针
- */
-extern const motor_measure_t *get_chassis_motor_measure_point(uint8_t i);
+// /**
+//  * @brief          return the chassis 3508 motor data point
+//  * @param[in]      i: motor number,range [0,3]
+//  * @retval         motor data point
+//  */
+// /**
+//  * @brief          返回底盘电机 3508电机数据指针
+//  * @param[in]      i: 电机编号,范围[0,3]
+//  * @retval         电机数据指针
+//  */
+// extern const motor_measure_t *get_chassis_motor_measure_point(uint8_t i);
 
 #endif

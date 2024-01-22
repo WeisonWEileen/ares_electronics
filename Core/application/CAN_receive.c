@@ -25,8 +25,7 @@ extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
 // motor data read 拼接高八位和低八位
 
-extern motor_v_data_t motor_3508[2];  // 电机目标pid调控的数据，初始化在MotorTask.c里面
-
+extern motor_run_data_t motor_3508[2]; // 电机目标pid调控的数据，初始化在MotorTask.c里面
 
 #define get_motor_measure(ptr, data)                                     \
     {                                                                    \
@@ -36,13 +35,9 @@ extern motor_v_data_t motor_3508[2];  // 电机目标pid调控的数据，初始
         (ptr)->given_current = (__uint16_t)((data)[4] << 8 | (data)[5]); \
         (ptr)->temperate = (data)[6];                                    \
     }
-    /*
-    motor data,  0:chassis motor1 3508;1:chassis motor3 3508;2:chassis motor3 3508;3:chassis motor4 3508;
-    4:yaw gimbal motor 6020;5:pitch gimbal motor 6020;6:trigger motor 2006;
-    电机数据, 0:底盘电机1 3508电机,  1:底盘电机2 3508电机,2:底盘电机3 3508电机,3:底盘电机4 3508电机;
-    4:yaw云台电机 6020电机; 5:pitch云台电机 6020电机; 6:拨弹电机 2006电机*/
 
-motor_measure_t motor_chassis[7];
+
+motor_raw_measure_t motor_chassis[7];  //电机从can线读到的原始数据
 // extern motor_ang_data_t motor_3508;
 
 static CAN_TxHeaderTypeDef gimbal_tx_message;
@@ -74,20 +69,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     {
         get_motor_measure(&motor_chassis[0], rx_data);
         motor_3508[0].realRpm = (float)motor_chassis[0].speed_rpm;
-
-        // //下面是调角度的东西
-        // if ((motor1.ecd - motor1.last_ecd) > 4096)
-        //     motor_3508.ang_round_num++;
-        // else if ((motor1.ecd - motor1.last_ecd) < -4096)
-        //     motor_3508.ang_round_num--;
-
-        // //1. 解算角度:（当前读取码盘值-初始的码盘值+圈数*8192）/ 8192 / 转速比 *2*PI
-        // //2. 映射到（-pi，pi）区间
-        // motor_3508.relative_angle = norm_rad_format((float)(motor1.ecd - motor_3508.offset_ecd + motor_3508.ang_round_num * 8192) / 8192 / 19.02f * 2 * PI);
-
-        // // 查电调手册可知，relative_speed是转子的转速值，rpm
-        // // 但是我们需要的数据是rad/s （这里目前是错的，但是教程说和后面的代码有关，我先不改）
-        // motor_3508.relative_speed = (float)motor1.speed_rpm / 8192 * 2 * PI / 19.02f;      
+        Angle_compute(&motor_chassis[0], &motor_3508[0]);
         break;
     }
     case CAN_3508_M2_ID:

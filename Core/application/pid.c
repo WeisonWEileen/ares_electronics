@@ -1,142 +1,265 @@
 /**
-  ****************************(C) COPYRIGHT 2019 DJI****************************
-  * @file       pid.c/h
-  * @brief      pid实现函数，包括初始化，PID计算函数，
-  * @note
-  * @history
-  *  Version    Date            Author          Modification
-  *  V1.0.0     Dec-26-2018     RM              1. 完成
-  *
-  @verbatim
-  ==============================================================================
-
-  ==============================================================================
-  @endverbatim
-  ****************************(C) COPYRIGHT 2019 DJI****************************
-  */
-
+ ******************************************************************************
+ * @file    pid.c
+ * @author  Hongxi Wong
+ * @version V1.0.6
+ * @date    2019/12/17
+ * @brief   对每一个pid结构体都要先进行函数的连接，再进行初始化
+ ******************************************************************************
+ * @attention
+ *
+ ******************************************************************************
+ */
 #include "pid.h"
-#include "main.h"
+#include "struct_typedef.h"
+/***************************PID param initialize******************************/
+static void f_PID_param_init(
+    PID_TypeDef *pid,
+    uint16_t max_out,
+    uint16_t intergral_limit,
+     fp32 deadband,
 
-#define LimitMax(input, max)   \
-    {                          \
-        if (input > max)       \
-        {                      \
-            input = max;       \
-        }                      \
-        else if (input < -max) \
-        {                      \
-            input = -max;      \
-        }                      \
-    }
+     fp32 kp,
+     fp32 Ki,
+     fp32 Kd,
 
-/**
- * @brief          pid struct data init
- * @param[out]     pid: PID struct data point
- * @param[in]      mode: PID_POSITION: normal pid
- *                 PID_DELTA: delta pid
- * @param[in]      PID: 0: kp, 1: ki, 2:kd
- * @param[in]      max_out: pid max out
- * @param[in]      max_iout: pid max iout
- * @retval         none
- */
-/**
- * @brief          pid struct data init
- * @param[out]     pid: PID结构数据指针
- * @param[in]      mode: PID_POSITION:普通PID
- *                 PID_DELTA: 差分PID
- * @param[in]      PID: 0: kp, 1: ki, 2:kd
- * @param[in]      max_out: pid最大输出
- * @param[in]      max_iout: pid最大积分输出
- * @retval         none
- */
-void PID_init(pid_type_def *pid, int mode, const fp32 PID[3], fp32 max_out, fp32 max_iout)
+     fp32 Changing_Integral_A,
+     fp32 Changing_Integral_B,
+
+     fp32 output_filtering_coefficient,
+     fp32 derivative_filtering_coefficient,
+
+    uint8_t improve)
 {
-    if (pid == NULL || PID == NULL)
-    {
-        return;
-    }
-    pid->mode = mode;
-    pid->Kp = PID[0];
-    pid->Ki = PID[1];
-    pid->Kd = PID[2];
-    pid->max_out = max_out;
-    pid->max_iout = max_iout;
-    pid->Dbuf[0] = pid->Dbuf[1] = pid->Dbuf[2] = 0.0f;
-    pid->error[0] = pid->error[1] = pid->error[2] = pid->Pout = pid->Iout = pid->Dout = pid->out = 0.0f;
+    pid->DeadBand = deadband;
+    pid->IntegralLimit = intergral_limit;
+    pid->MaxOut = max_out;
+    pid->MaxErr = max_out * 2;
+    pid->Target = 0;
+
+    pid->Kp = kp;
+    pid->Ki = Ki;
+    pid->Kd = Kd;
+    pid->ITerm = 0;
+
+    pid->ScalarA = Changing_Integral_A;
+    pid->ScalarB = Changing_Integral_B;
+
+    pid->Output_Filtering_Coefficient = output_filtering_coefficient;
+
+    pid->Derivative_Filtering_Coefficient = derivative_filtering_coefficient;
+
+    pid->Improve = improve;
+
+    pid->ERRORHandler.ERRORCount = 0;
+    pid->ERRORHandler.ERRORType = PID_ERROR_NONE;
+
+    pid->Output = 0;
 }
 
-/**
- * @brief          pid calculate
- * @param[out]     pid: PID struct data point
- * @param[in]      ref: feedback data
- * @param[in]      set: set point
- * @retval         pid out
- */
-/**
- * @brief          pid计算
- * @param[out]     pid: PID结构数据指针
- * @param[in]      ref: 反馈数据
- * @param[in]      set: 设定值
- * @retval         pid输出
- */
-fp32 PID_calc(pid_type_def *pid, fp32 ref, fp32 set)
+/**************************PID param reset*********************************/
+static void f_PID_reset(PID_TypeDef *pid,  fp32 Kp,  fp32 Ki,  fp32 Kd)
 {
-    if (pid == NULL)
-    {
-        return 0.0f;
-    }
+    pid->Kp = Kp;
+    pid->Ki = Ki;
+    pid->Kd = Kd;
 
-    pid->error[2] = pid->error[1];
-    pid->error[1] = pid->error[0];
-    pid->set = set;
-    pid->fdb = ref;
-    pid->error[0] = set - ref;
-    if (pid->mode == PID_POSITION)
-    {
-        pid->Pout = pid->Kp * pid->error[0];
-        pid->Iout += pid->Ki * pid->error[0];
-        pid->Dbuf[2] = pid->Dbuf[1];
-        pid->Dbuf[1] = pid->Dbuf[0];
-        pid->Dbuf[0] = (pid->error[0] - pid->error[1]);
-        pid->Dout = pid->Kd * pid->Dbuf[0];
-        LimitMax(pid->Iout, pid->max_iout);
-        pid->out = pid->Pout + pid->Iout + pid->Dout;
-        LimitMax(pid->out, pid->max_out);
-    }
-    else if (pid->mode == PID_DELTA)
-    {
-        pid->Pout = pid->Kp * (pid->error[0] - pid->error[1]);
-        pid->Iout = pid->Ki * pid->error[0];
-        pid->Dbuf[2] = pid->Dbuf[1];
-        pid->Dbuf[1] = pid->Dbuf[0];
-        pid->Dbuf[0] = (pid->error[0] - 2.0f * pid->error[1] + pid->error[2]);
-        pid->Dout = pid->Kd * pid->Dbuf[0];
-        pid->out += pid->Pout + pid->Iout + pid->Dout;
-        LimitMax(pid->out, pid->max_out);
-    }
-    return pid->out;
+    if (pid->Ki == 0)
+        pid->Iout = 0;
 }
 
-/**
- * @brief          pid out clear
- * @param[out]     pid: PID struct data point
- * @retval         none
- */
-/**
- * @brief          pid 输出清除
- * @param[out]     pid: PID结构数据指针
- * @retval         none
- */
-void PID_clear(pid_type_def *pid)
+/***************************PID calculate**********************************/
+ fp32 PID_Calculate(PID_TypeDef *pid,  fp32 measure,  fp32 target)
 {
-    if (pid == NULL)
+    if (pid->Improve & ErrorHandle) // ErrorHandle
     {
-        return;
+        f_PID_ErrorHandle(pid); // last_xxx = xxx
+        if (pid->ERRORHandler.ERRORType != PID_ERROR_NONE)
+        {
+            pid->Output = 0;
+            return 0; // Catch ERROR
+        }
     }
 
-    pid->error[0] = pid->error[1] = pid->error[2] = 0.0f;
-    pid->Dbuf[0] = pid->Dbuf[1] = pid->Dbuf[2] = 0.0f;
-    pid->out = pid->Pout = pid->Iout = pid->Dout = 0.0f;
-    pid->fdb = pid->set = 0.0f;
+    pid->Measure = measure;
+    pid->Target = target;
+    pid->Err = pid->Target - pid->Measure;
+
+    if (ABS(pid->Err) > pid->DeadBand)
+    {
+        pid->Pout = pid->Kp * pid->Err;
+        pid->ITerm = pid->Ki * pid->Err;
+        pid->Dout = pid->Kd * (pid->Err - pid->Last_Err);
+
+        // Trapezoid Intergral
+        if (pid->Improve & Trapezoid_Intergral)
+            f_Trapezoid_Intergral(pid);
+        // Changing Integral Rate
+        if (pid->Improve & ChangingIntegralRate)
+            f_Changing_Integral_Rate(pid);
+        // Integral limit
+        if (pid->Improve & Integral_Limit)
+            f_Integral_Limit(pid);
+        // Derivative On Measurement
+        if (pid->Improve & Derivative_On_Measurement)
+            f_Derivative_On_Measurement(pid);
+        // Derivative filter
+        if (pid->Improve & DerivativeFilter)
+            f_Derivative_Filter(pid);
+
+        pid->Iout += pid->ITerm;
+
+        pid->Output = pid->Pout + pid->Iout + pid->Dout;
+
+        // Output Filter
+        if (pid->Improve & OutputFilter)
+            f_Output_Filter(pid);
+
+        // Output limit
+        f_Output_Limit(pid);
+
+        // Proportional limit
+        f_Proportion_Limit(pid);
+    }
+    pid->Last_Measure = pid->Measure;
+    pid->Last_Output = pid->Output;
+    pid->Last_Dout = pid->Dout;
+    pid->Last_Err = pid->Err;
+
+    return pid->Output;
+}
+
+/*****************PID Improvement Function*********************/
+void f_Trapezoid_Intergral(PID_TypeDef *pid)
+{
+    pid->ITerm = pid->Ki * ((pid->Err + pid->Last_Err) / 2);
+}
+void f_Changing_Integral_Rate(PID_TypeDef *pid)
+{
+    if (pid->Err * pid->Iout > 0)
+    {
+        // Integral still increasing
+        if (ABS(pid->Err) <= pid->ScalarB)
+            return; // Full integral
+        if (ABS(pid->Err) <= (pid->ScalarA + pid->ScalarB))
+            pid->ITerm *= (pid->ScalarA - ABS(pid->Err) + pid->ScalarB) / pid->ScalarA;
+        else
+            pid->ITerm = 0;
+    }
+}
+void f_Integral_Limit(PID_TypeDef *pid)
+{
+     fp32 temp_Output, temp_Iout;
+    temp_Iout = pid->Iout + pid->ITerm;
+    temp_Output = pid->Pout + pid->Iout + pid->Dout;
+    if (ABS(temp_Output) > pid->MaxOut)
+    {
+        if (pid->Err * pid->Iout > 0)
+        {
+            // Integral still increasing
+            pid->ITerm = 0;
+        }
+    }
+
+    if (temp_Iout > pid->IntegralLimit)
+    {
+        pid->ITerm = 0;
+        pid->Iout = pid->IntegralLimit;
+    }
+    if (temp_Iout < -pid->IntegralLimit)
+    {
+        pid->ITerm = 0;
+        pid->Iout = -pid->IntegralLimit;
+    }
+}
+
+void f_Derivative_On_Measurement(PID_TypeDef *pid)
+{
+    pid->Dout = pid->Kd * (pid->Last_Measure - pid->Measure);
+}
+
+void f_Derivative_Filter(PID_TypeDef *pid)
+{
+    pid->Dout = pid->Dout * pid->Derivative_Filtering_Coefficient +
+                pid->Last_Dout * (1 - pid->Derivative_Filtering_Coefficient);
+}
+
+void f_Output_Filter(PID_TypeDef *pid)
+{
+    pid->Output = pid->Output * pid->Output_Filtering_Coefficient +
+                  pid->Last_Output * (1 - pid->Output_Filtering_Coefficient);
+}
+
+void f_Output_Limit(PID_TypeDef *pid)
+{
+    if (pid->Output > pid->MaxOut)
+    {
+        pid->Output = pid->MaxOut;
+    }
+    if (pid->Output < -(pid->MaxOut))
+    {
+        pid->Output = -(pid->MaxOut);
+    }
+}
+
+  void f_Proportion_Limit(PID_TypeDef *pid)
+{
+    // Proportion limit is insignificant in control process
+    // but it makes variable chart look better
+    if (pid->Pout > pid->MaxOut)
+    {
+        pid->Pout = pid->MaxOut;
+    }
+    if (pid->Pout < -(pid->MaxOut))
+    {
+        pid->Pout = -(pid->MaxOut);
+    }
+}
+
+/*****************PID ERRORHandle Function*********************/
+  void f_PID_ErrorHandle(PID_TypeDef *pid)
+{
+    /*Motor Blocked Handle*/
+    if (pid->Output < pid->MaxOut * 0.01f)
+        return;
+
+    if ((ABS(pid->Target - pid->Measure) / pid->Target) > 0.9f)
+    {
+        // Motor blocked counting
+        pid->ERRORHandler.ERRORCount++;
+    }
+    else
+    {
+        pid->ERRORHandler.ERRORCount = 0;
+    }
+
+    if (pid->ERRORHandler.ERRORCount > 1000)
+    {
+        // Motor blocked over 1000times
+        pid->ERRORHandler.ERRORType = Motor_Blocked;
+    }
+}
+
+/*****************PID structure initialize*********************/
+void PID_Init(
+    PID_TypeDef *pid,
+    uint16_t max_out,
+    uint16_t intergral_limit,
+    fp32 deadband,
+
+    fp32 kp,
+    fp32 Ki,
+    fp32 Kd,
+
+    fp32 A,
+    fp32 B,
+
+    fp32 output_filtering_coefficient,
+    fp32 derivative_filtering_coefficient,
+    uint8_t improve)
+{
+    pid->PID_param_init = f_PID_param_init;
+    pid->PID_reset = f_PID_reset;
+    pid->PID_param_init(pid, max_out, intergral_limit, deadband,
+                        kp, Ki, Kd, A, B, output_filtering_coefficient, derivative_filtering_coefficient, improve);
 }
