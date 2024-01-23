@@ -20,10 +20,11 @@ typedef struct
 
     /*以下是角度的信息*/
     fp32 desireAngle;       // 目标角度
-    fp32 relative_angle;    // 累计角度
+    fp32 accumAngle;       // 累计转过的角度
+    fp32 realAngle;       // 映射到(-pi,pi)的角度
     __int32_t ang_round_num; // 记录转过的圈数
-    __uint16_t offset_ecd;   // 电机上电的时候的码盘值(偏置值)
-    PID_TypeDef ang_pid;     // pid结构体
+    PID_TypeDef ang_pid;     // 角度pid结构体
+    
     fp32 omega;         //rad/s 角速度
 } motor_run_data_t; // 电机速度的数据结构
 

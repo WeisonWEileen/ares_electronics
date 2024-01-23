@@ -17,15 +17,15 @@
   ****************************(C) COPYRIGHT 2019 DJI****************************
   */
 
-#include "CAN_receive.h"
 #include "main.h"
 #include "MotorTask.h"
 
 extern CAN_HandleTypeDef hcan1;
 extern CAN_HandleTypeDef hcan2;
-// motor data read 拼接高八位和低八位
 
-extern motor_run_data_t motor_3508[2]; // 电机目标pid调控的数据，初始化在MotorTask.c里面
+// 角度解算和电机目标pid调控的数据，初始化在MotorTask.c里面
+extern void Angle_compute(motor_raw_measure_t *raw_data, motor_run_data_t *motor_run);
+extern motor_run_data_t motor_3508[1]; 
 
 #define get_motor_measure(ptr, data)                                     \
     {                                                                    \
@@ -72,12 +72,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         Angle_compute(&motor_chassis[0], &motor_3508[0]);
         break;
     }
-    case CAN_3508_M2_ID:
-    {
-        get_motor_measure(&motor_chassis[1], rx_data);
-        motor_3508[1].realRpm = (float)motor_chassis[1].speed_rpm;
-        break;
-    }
+
     default:
     {
         break;

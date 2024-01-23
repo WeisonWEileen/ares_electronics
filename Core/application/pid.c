@@ -91,7 +91,7 @@ static void f_PID_reset(PID_TypeDef *pid,  fp32 Kp,  fp32 Ki,  fp32 Kd)
         pid->ITerm = pid->Ki * pid->Err;
         pid->Dout = pid->Kd * (pid->Err - pid->Last_Err);
 
-        // Trapezoid Intergral
+        // Trapezoid Intergral  梯形积分
         if (pid->Improve & Trapezoid_Intergral)
             f_Trapezoid_Intergral(pid);
         // Changing Integral Rate
@@ -100,7 +100,7 @@ static void f_PID_reset(PID_TypeDef *pid,  fp32 Kp,  fp32 Ki,  fp32 Kd)
         // Integral limit
         if (pid->Improve & Integral_Limit)
             f_Integral_Limit(pid);
-        // Derivative On Measurement
+        // Derivative On Measurement 微分先行
         if (pid->Improve & Derivative_On_Measurement)
             f_Derivative_On_Measurement(pid);
         // Derivative filter
@@ -217,7 +217,9 @@ void f_Output_Limit(PID_TypeDef *pid)
 }
 
 /*****************PID ERRORHandle Function*********************/
-  void f_PID_ErrorHandle(PID_TypeDef *pid)
+/*原理就是长期电机没有达到目标状态，但是我感觉有点问题，比如说Measure不为一开始不为
+0的话，比如说角度任务，pid->Target就不能很好地作为分母的作用了*/
+void f_PID_ErrorHandle(PID_TypeDef *pid)
 {
     /*Motor Blocked Handle*/
     if (pid->Output < pid->MaxOut * 0.01f)

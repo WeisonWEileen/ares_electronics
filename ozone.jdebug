@@ -33,8 +33,8 @@ void OnProjectLoad (void) {
   //
   // User settings
   //
+  Project.SetOSPlugin ("FreeRTOSPlugin_CM4");
   Edit.SysVar (VAR_HSS_SPEED, FREQ_500_HZ);
-  Project.SetOSPlugin ("FreeRTOSPlugin");
   File.Open ("$(ProjectDir)/build/weison.elf");
 }
 

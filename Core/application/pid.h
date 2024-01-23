@@ -13,6 +13,7 @@
 #ifndef _PID_H
 #define _PID_H
 
+#include <stdint.h>
 #include "struct_typedef.h"
 
 #define ABS(x) ((x > 0) ? x : -x)

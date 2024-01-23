@@ -48,7 +48,7 @@
 #define BMI088_GYRO_250_SEN 0.00013315805450396191230191732547673f
 #define BMI088_GYRO_125_SEN 0.000066579027251980956150958662738366f
 
-typedef __attribute__((packed)) struct BMI088_RAW_DATA
+typedef struct BMI088_RAW_DATA
 {
     uint8_t status;
     int16_t accel[3];

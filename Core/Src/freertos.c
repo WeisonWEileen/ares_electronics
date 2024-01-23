@@ -121,11 +121,11 @@ void MX_FREERTOS_Init(void) {
   // defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
 
   /* definition and creation of LED_Task_Blue */
-  osThreadDef(LED_Task_Blue, LED_Blue_Task, osPriorityNormal, 0, 128);
-  led_blue_TaskHandle = osThreadCreate(osThread(LED_Task_Blue), NULL);
+  // osThreadDef(LED_Task_Blue, LED_Blue_Task, osPriorityNormal, 0, 128);
+  // led_blue_TaskHandle = osThreadCreate(osThread(LED_Task_Blue), NULL);
 
   /* definition and creation of motor_ang_task */
-  osThreadDef(motor_ang_task, MotorTask, osPriorityNormal, 0, 128);
+  osThreadDef(motor_ang_task, MotorTask, osPriorityAboveNormal, 0, 128);
   motor_run_TaskHandle = osThreadCreate(osThread(motor_ang_task), NULL);
 
   /* definition and creation of imu_read_Task */
@@ -133,8 +133,8 @@ void MX_FREERTOS_Init(void) {
   // imu_read_TaskHandle = osThreadCreate(osThread(imu_read_Task), NULL);
 
   /* definition and creation of ADC_sample_Task */
-  osThreadDef(adc_sample_Task, ADC_sample_Task, osPriorityNormal, 0, 128);
-  adc_sample_TaskHandle = osThreadCreate(osThread(adc_sample_Task), NULL);
+  // osThreadDef(adc_sample_Task, ADC_sample_Task, osPriorityNormal, 0, 128);
+  // adc_sample_TaskHandle = osThreadCreate(osThread(adc_sample_Task), NULL);
 
 
   /* USER CODE END RTOS_THREADS */

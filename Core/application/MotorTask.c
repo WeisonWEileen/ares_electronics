@@ -13,11 +13,19 @@ motor_run_data_t motor_3508[2]; // 电机驱动电机运动的数据
  */
 void MotorTask(void const *argument)
 {
-    vTaskDelay(100); //delay一下，让canReceive里面的数据先解算
+    vTaskDelay(100); // delay一下，让canReceive里面的数据先解算
     motor_data_init();
-    while(1){
-        PID_Calculate(&motor_3508[0].pid, motor_3508[0].realRpm, motor_3508[0].desireRpm);
-        CAN_cmd_chassis(motor_3508[0].pid.Output, 0, 0, 0);
+    motor_3508[0].ang_pid.PID_reset(&motor_3508[0].ang_pid, 0.08, 0, 2);
+    motor_3508[0].pid.PID_reset(&motor_3508[0].pid, 0.8, 0.01, 0);
+    //防止开始前已经有can累计
+    motor_3508[0].accumAngle = 0;
+    while (1)
+    {
+        // 先算外环的角度的输出
+        PID_Calculate(&motor_3508[0].ang_pid, motor_3508[0].accumAngle, motor_3508[0].desireAngle);
+        // 再算内环的电流的输出
+        PID_Calculate(&motor_3508[0].pid, motor_3508[0].realRpm, motor_3508[0].ang_pid.Output);
+        // CAN_cmd_chassis(motor_3508[0].pid.Output, 0, 0, 0);
         vTaskDelay(1);
     }
 }
@@ -29,14 +37,15 @@ void MotorTask(void const *argument)
 void motor_data_init(void)
 {
     // 给电机3000的目标转速
-    motor_3508[0].desireRpm =  3000;  
+    motor_3508[0].desireRpm = 0;
     motor_3508[0].realRpm = 0;
-    // motor_3508[0].desireAngle = PI/2;
-    // motor_3508[1].desireRpm = -3000;
-    // motor_3508[1].realRpm = 0;
+    motor_3508[0].desireAngle = PI / 2;
+    motor_3508[0].accumAngle = 0;
 
-    for(int i=0; i<sizeof(motor_3508)/sizeof(motor_3508[0]); i++){
-        PID_Init(&motor_3508[i].pid, 9600, 3000,3,  5,0.2,0,   100,100,  0.02,0.02, (ErrorHandle | Integral_Limit | OutputFilter));
+    for (int i = 0; i < sizeof(motor_3508) / sizeof(motor_3508[0]); i++)
+    {
+        PID_Init(&motor_3508[i].ang_pid, 9600, 3000, 0.03, 1, 0, 0, 100, 100, 0.02, 0.02, NONE);
+        PID_Init(&motor_3508[i].pid, 9600, 3000, 3, 6, 0, 0, 100, 100, 0.02, 0.02, NONE);
     }
 }
 /**
@@ -44,26 +53,20 @@ void motor_data_init(void)
  * @param[in]      raw_data: 电机原始数据
  * @param[in]      motor_run: 电机运动数据
  * @retval         none
- 
+
 */
 void Angle_compute(motor_raw_measure_t *raw_data, motor_run_data_t *motor_run)
 {
-    // 下面是调角度的东西
-    if ((raw_data->ecd - raw_data->last_ecd) > 4096)
-        motor_run->ang_round_num++;
-    else if ((raw_data->ecd - raw_data->last_ecd) < -4096)
-        motor_run->ang_round_num++;
+    __uint16_t delta_ecd = raw_data->ecd - raw_data->last_ecd;
+    // ecd的测量值为(-4096,4096)，根据电机模型，前后差值的超过4096的话，其通过一次ecd为0的点，圈数可以+1
+    if (delta_ecd > 4096)
+        motor_run->accumAngle += 2*PI ;
+    else if (delta_ecd < -4096)
+        motor_run->accumAngle -= 2 * PI;
 
     // 1. 解算角度:（当前读取码盘值-初始的码盘值+圈数*8192）/ 8192 / 转速比 *2*PI
-    // 2. 映射到（-pi，pi）区间
-    motor_run->relative_angle = norm_rad_format((float)(raw_data->ecd - motor_run->offset_ecd + motor_run->ang_round_num * 8192) / 8192 / 19.02f * 2 * PI);
-
-    // 查电调手册可知，relative_speed是转子的转速值，rpm
-    // 但是我们需要的数据是rad/s 
-    motor_run->omega = (float)raw_data->speed_rpm * 60 * 2 * PI / 19.02f;
-    //目前还不知道这里是否冗余，因为realRpm那里我已经读了用了一次speed_rpm了
-    // motor_run->relative_speed = (float)motor1.speed_rpm / 8192 * 2 * PI / 19.02f;（这里目前是错的，但是教程说和后面的代码有关，我先不改）
-
+    //        2. 映射到（-pi，pi）区间
+        motor_run->accumAngle += (float)(delta_ecd) / 8192 / 19.02f * 2 * PI;
 }
 
 fp32 norm_rad_format(fp32 angle)
