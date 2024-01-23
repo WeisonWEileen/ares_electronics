@@ -4,29 +4,36 @@
 #include "pid.h"
 #include "CAN_receive.h"
 
-motor_run_data_t motor_3508[2]; // 电机驱动电机运动的数据
+motor_run_data_t motor_3508[1]; // 电机驱动电机运动的数据
+
+extern void sbus_to_rpm(void);
 
 /**
  * @brief          电机转动任务，freertos种调用
  * @param[in]      argument:不需要传参，canReceive任务传入的参数
  * @retval         none
  */
-void MotorTask(void const *argument)
+    void MotorTask(void const *argument)
 {
     vTaskDelay(100); // delay一下，让canReceive里面的数据先解算
-    motor_data_init();
+    motor_data_init(); //desireRpm = 0
     motor_3508[0].ang_pid.PID_reset(&motor_3508[0].ang_pid, 0.08, 0, 2);
-    motor_3508[0].pid.PID_reset(&motor_3508[0].pid, 0.8, 0.01, 0);
+    motor_3508[0].pid.PID_reset(&motor_3508[0].pid, 6, 0.01, 0.1);
     //防止开始前已经有can累计
     motor_3508[0].accumAngle = 0;
     while (1)
     {
-        // 先算外环的角度的输出
-        PID_Calculate(&motor_3508[0].ang_pid, motor_3508[0].accumAngle, motor_3508[0].desireAngle);
-        // 再算内环的电流的输出
-        PID_Calculate(&motor_3508[0].pid, motor_3508[0].realRpm, motor_3508[0].ang_pid.Output);
-        // CAN_cmd_chassis(motor_3508[0].pid.Output, 0, 0, 0);
+        sbus_to_rpm();
+        PID_Calculate(&motor_3508[0].pid, motor_3508[0].realRpm, motor_3508[0].desireRpm);
+        CAN_cmd_chassis(motor_3508[0].pid.Output, 0, 0, 0);
         vTaskDelay(1);
+
+        // // 双环pid，先算外环的角度的输出，@to do没调明白
+        // PID_Calculate(&motor_3508[0].ang_pid, motor_3508[0].accumAngle, motor_3508[0].desireAngle);
+        // // 再算内环的电流的输出
+        // PID_Calculate(&motor_3508[0].pid, motor_3508[0].realRpm, motor_3508[0].ang_pid.Output);
+        // CAN_cmd_chassis(motor_3508[0].pid.Output, 0, 0, 0);
+        // vTaskDelay(1);
     }
 }
 
@@ -39,7 +46,7 @@ void motor_data_init(void)
     // 给电机3000的目标转速
     motor_3508[0].desireRpm = 0;
     motor_3508[0].realRpm = 0;
-    motor_3508[0].desireAngle = PI / 2;
+    motor_3508[0].desireAngle = 0;
     motor_3508[0].accumAngle = 0;
 
     for (int i = 0; i < sizeof(motor_3508) / sizeof(motor_3508[0]); i++)

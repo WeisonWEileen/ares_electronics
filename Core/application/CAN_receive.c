@@ -69,7 +69,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
     {
         get_motor_measure(&motor_chassis[0], rx_data);
         motor_3508[0].realRpm = (float)motor_chassis[0].speed_rpm;
-        Angle_compute(&motor_chassis[0], &motor_3508[0]);
+        // Angle_compute(&motor_chassis[0], &motor_3508[0]);
         break;
     }
 
