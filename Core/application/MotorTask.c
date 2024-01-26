@@ -3,9 +3,10 @@
 #include "main.h"
 #include "pid.h"
 #include "CAN_receive.h"
+#include "remote.h"
 
-motor_run_data_t motor_3508[1]; // 电机驱动电机运动的数据
-
+motor_run_data_t motor_3508[4]; // 电机驱动电机运动的数据
+chassis_move_t chassis_vxyz;
 extern void sbus_to_rpm(void);
 
 /**
@@ -13,19 +14,25 @@ extern void sbus_to_rpm(void);
  * @param[in]      argument:不需要传参，canReceive任务传入的参数
  * @retval         none
  */
-    void MotorTask(void const *argument)
+void MotorTask(void const *argument)
 {
     vTaskDelay(100); // delay一下，让canReceive里面的数据先解算
     motor_data_init(); //desireRpm = 0
-    motor_3508[0].ang_pid.PID_reset(&motor_3508[0].ang_pid, 0.08, 0, 2);
-    motor_3508[0].pid.PID_reset(&motor_3508[0].pid, 6, 0.01, 0.1);
+    // motor_3508[0].ang_pid.PID_reset(&motor_3508[0].ang_pid, 0.08, 0, 2);
+    // motor_3508[0].pid.PID_reset(&motor_3508[0].pid, 6, 0.01, 0.1);
     //防止开始前已经有can累计
-    motor_3508[0].accumAngle = 0;
+    // motor_3508[0].accumAngle = 0;
     while (1)
     {
-        sbus_to_rpm();
-        PID_Calculate(&motor_3508[0].pid, motor_3508[0].realRpm, motor_3508[0].desireRpm);
-        CAN_cmd_chassis(motor_3508[0].pid.Output, 0, 0, 0);
+        sbus_to_chasisvxyz();
+        chasisvxzy_to_desireRpm();
+
+        for(int i=0 ; i<4 ; i++)
+        {
+            PID_Calculate(&motor_3508[i].pid, motor_3508[i].realRpm, motor_3508[i].desireRpm);
+        }
+        
+        CAN_cmd_chassis(motor_3508[0].pid.Output, motor_3508[1].pid.Output, motor_3508[2].pid.Output, motor_3508[3].pid.Output);
         vTaskDelay(1);
 
         // // 双环pid，先算外环的角度的输出，@to do没调明白
@@ -44,17 +51,27 @@ extern void sbus_to_rpm(void);
 void motor_data_init(void)
 {
     // 给电机3000的目标转速
-    motor_3508[0].desireRpm = 0;
-    motor_3508[0].realRpm = 0;
-    motor_3508[0].desireAngle = 0;
-    motor_3508[0].accumAngle = 0;
-
-    for (int i = 0; i < sizeof(motor_3508) / sizeof(motor_3508[0]); i++)
+    for (int i = 0; i < 4 ; i++)
     {
-        PID_Init(&motor_3508[i].ang_pid, 9600, 3000, 0.03, 1, 0, 0, 100, 100, 0.02, 0.02, NONE);
-        PID_Init(&motor_3508[i].pid, 9600, 3000, 3, 6, 0, 0, 100, 100, 0.02, 0.02, NONE);
+        motor_3508[i].desireRpm = motor_3508[i].realRpm = motor_3508[i].desireAngle = 0;
+    }
+
+    for (int i = 0; i < 4 ; i++)
+    {
+        // PID_Init(&motor_3508[i].ang_pid, 9600, 3000, 0.03, 1, 0, 0, 100, 100, 0.02, 0.02, NONE);
+        PID_Init(&motor_3508[i].pid, 9600, 3000, 3, 6, 0, 0.1, 100, 100, 0.02, 0.02, NONE);
     }
 }
+
+void chasisvxzy_to_desireRpm(void)
+{
+    motor_3508[0].desireRpm = (-chassis_vxyz.vx + chassis_vxyz.vy + chassis_vxyz.wz ) * rpmCoeff;
+    motor_3508[1].desireRpm = -(chassis_vxyz.vx + chassis_vxyz.vy - chassis_vxyz.wz ) * rpmCoeff;
+    motor_3508[2].desireRpm = -(-chassis_vxyz.vx + chassis_vxyz.vy - chassis_vxyz.wz ) * rpmCoeff;
+    motor_3508[3].desireRpm = (chassis_vxyz.vx + chassis_vxyz.vy + chassis_vxyz.wz ) * rpmCoeff;
+}
+
+
 /**
  * @brief          电机角度解算，包括角度和角速度
  * @param[in]      raw_data: 电机原始数据
@@ -95,6 +112,7 @@ fp32 norm_rad_format(fp32 angle)
     return angle;
 }
 
+
 // 防止频繁按键
 // bool_t motor_flag = 1;
 // int key_delay = 1000;
@@ -111,42 +129,3 @@ fp32 norm_rad_format(fp32 angle)
 //     }
 // }
 
-// void MotorTask(void const *argument)
-// {
-//     vTaskDelay(200);
-//     motor_ang_data_t_init();
-//     vTaskDelay(200);//delay一下，让数据解算完毕，比如canReceive里面的一堆
-//     motor_ang_data_t_init();
-
-//     while (1)
-//     {
-//         if (key_delay > 0)
-//         {
-//             key_delay--;
-//         }
-
-//         if (motor_flag)
-//         {
-//             //获取目前的角度值，在基础上加上target值pi/2，每按一次按键新开始一个pi/2的任务
-//             motor_3508.target_angle = norm_rad_format(motor_3508.relative_angle + PI / 2);
-//             motor_flag = 0;
-//         }
-//         motor_3508.given_current = PID_calc(&motor_3508.ang_pid, motor_3508.relative_angle, motor_3508.target_angle, motor_3508.relative_speed);
-//         Limit_ang_out(&motor_3508.given_current, 16384);
-//         CAN_cmd_chassis(motor_3508.given_current, 0, 0, 0);
-//         // CAN_cmd_chassis(2000, 0, 0, 0);
-
-//         vTaskDelay(1);
-//     }
-// }
-
-// void motor_ang_data_t_init(void)
-// { // 电机的数据初始化
-//     motor_3508.offset_ecd = 0;
-//     motor_3508.relative_speed = 0;
-//     motor_3508.ang_round_num = 0;
-//     motor_3508.target_angle = motor_3508.relative_angle;
-
-//     fp32 pos_pid_3508[3] = {2000, 0, -200};
-//     PID_init(&motor_3508.ang_pid, pos_pid_3508, 5000, 500);
-// }

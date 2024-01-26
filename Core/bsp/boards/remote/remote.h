@@ -9,7 +9,7 @@ struct SBUS_t
 };
 
 extern void SBUS_IT_Open(void);
-extern void sbus_to_rpm(void);
+extern void sbus_to_chasisvxyz(void);
 
 #define SBUS0_DEFAULT  1000
 #define SBUS1_DEFAULT  1000

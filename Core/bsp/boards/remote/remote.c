@@ -6,7 +6,8 @@ uint8_t sbus_rx_buf[SBUS_DATA_SIZE]; // 接收sbus数据缓冲区
 uint8_t connect_flag = 0;              // 连接是否正常
 struct SBUS_t sbus;                  // SBUS 结构体实例化
 
-extern motor_run_data_t motor_3508[1];
+extern chassis_move_t chassis_vxyz;
+extern motor_run_data_t motor_3508[4];
 
 void SBUS_IT_Open(void)
 {
@@ -58,7 +59,11 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
         SBUS_IT_Open();
     }
 }
-void sbus_to_rpm(void)
+
+void sbus_to_chasisvxyz(void)
 {
-    motor_3508[0].desireRpm = 16*(sbus.ch[1] - SBUS1_DEFAULT);
+    chassis_vxyz.vx  = 16 * (sbus.ch[3] - SBUS3_DEFAULT);
+    chassis_vxyz.vy =  16 * (sbus.ch[1] - SBUS1_DEFAULT);
+    chassis_vxyz.wz =  16 * (sbus.ch[0] - SBUS0_DEFAULT);
 }
+

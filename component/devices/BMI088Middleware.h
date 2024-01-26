@@ -20,7 +20,6 @@ extern void BMI088_GYRO_NS_H(void);
 
 extern uint8_t BMI088_read_write_byte(uint8_t reg);
 
-
 #elif defined(BMI088_USE_IIC)
 
 #endif

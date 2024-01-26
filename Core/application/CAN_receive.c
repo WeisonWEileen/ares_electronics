@@ -25,7 +25,7 @@ extern CAN_HandleTypeDef hcan2;
 
 // 角度解算和电机目标pid调控的数据，初始化在MotorTask.c里面
 extern void Angle_compute(motor_raw_measure_t *raw_data, motor_run_data_t *motor_run);
-extern motor_run_data_t motor_3508[1]; 
+extern motor_run_data_t motor_3508[4]; 
 
 #define get_motor_measure(ptr, data)                                     \
     {                                                                    \
@@ -37,7 +37,7 @@ extern motor_run_data_t motor_3508[1];
     }
 
 
-motor_raw_measure_t motor_chassis[7];  //电机从can线读到的原始数据
+motor_raw_measure_t motor_chassis[4];  //电机从can线读到的原始数据
 // extern motor_ang_data_t motor_3508;
 
 static CAN_TxHeaderTypeDef gimbal_tx_message;
@@ -70,6 +70,24 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan)
         get_motor_measure(&motor_chassis[0], rx_data);
         motor_3508[0].realRpm = (float)motor_chassis[0].speed_rpm;
         // Angle_compute(&motor_chassis[0], &motor_3508[0]);
+        break;
+    }
+    case CAN_3508_M2_ID:
+    {
+        get_motor_measure(&motor_chassis[1], rx_data);
+        motor_3508[1].realRpm = (float)motor_chassis[1].speed_rpm;
+        break;
+    }
+    case CAN_3508_M3_ID:
+    {
+        get_motor_measure(&motor_chassis[2], rx_data);
+        motor_3508[2].realRpm = (float)motor_chassis[2].speed_rpm;
+        break;
+    }
+    case CAN_3508_M4_ID:
+    {
+        get_motor_measure(&motor_chassis[3], rx_data);
+        motor_3508[3].realRpm = (float)motor_chassis[3].speed_rpm;
         break;
     }
 
