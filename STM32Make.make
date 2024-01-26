@@ -53,9 +53,10 @@ Core/application/LED_Task.c \
 Core/application/MotorTask.c \
 Core/application/UsartTask.c \
 Core/application/adc_sample.c \
-Core/application/imu_read.c \
+Core/application/imu/imu_read.c \
 Core/application/pid.c \
 Core/bsp/boards/can/bsp_can.c \
+Core/bsp/boards/dwt/bsp_dwt.c \
 Core/bsp/boards/log/bsp_log.c \
 Core/bsp/boards/remote/remote.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
@@ -91,8 +92,8 @@ Middlewares/Third_Party/FreeRTOS/Source/tasks.c \
 Middlewares/Third_Party/FreeRTOS/Source/timers.c \
 Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT.c \
 Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT_printf.c \
-component/devices/BMI088Middleware.c \
-component/devices/BMI088driver.c
+component/devices/bmi088/BMI088Middleware.c \
+component/devices/bmi088/BMI088driver.c
 
 
 CPP_SOURCES = \
@@ -166,7 +167,9 @@ AS_INCLUDES = \
 C_INCLUDES =  \
 -ICore/Inc \
 -ICore/application \
+-ICore/application/imu \
 -ICore/bsp/boards/can \
+-ICore/bsp/boards/dwt \
 -ICore/bsp/boards/log \
 -ICore/bsp/boards/remote \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
@@ -177,7 +180,7 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/include \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 -IMiddlewares/Third_Party/SEGGER/RTT \
--Icomponent/devices
+-Icomponent/devices/bmi088
 
 
 

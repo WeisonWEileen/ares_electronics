@@ -129,8 +129,8 @@ void MX_FREERTOS_Init(void) {
   motor_run_TaskHandle = osThreadCreate(osThread(motor_ang_task), NULL);
 
   /* definition and creation of imu_read_Task */
-  // osThreadDef(imu_read_Task, Imu_read_Task, osPriorityNormal, 0, 128);
-  // imu_read_TaskHandle = osThreadCreate(osThread(imu_read_Task), NULL);
+  osThreadDef(imu_read_Task, Imu_read_Task, osPriorityNormal, 0, 128);
+  imu_read_TaskHandle = osThreadCreate(osThread(imu_read_Task), NULL);
 
   /* definition and creation of ADC_sample_Task */
   // osThreadDef(adc_sample_Task, ADC_sample_Task, osPriorityNormal, 0, 128);

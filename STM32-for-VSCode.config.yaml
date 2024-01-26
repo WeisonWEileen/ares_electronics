@@ -76,7 +76,9 @@ includeDirectories:
   - Core/Src/**
   - Core/Lib/**
   - Core/application/**
+  - Core/application/imu/**
   - Core/bsp/boards/can/**
+  - Core/bsp/boards/dwt/**
   - Core/bsp/boards/log/**
   - Core/bsp/boards/remote/**
   - component/devices/**
@@ -93,7 +95,9 @@ sourceFiles:
   - Core/Src/**
   - Core/Lib/**
   - Core/application/**
+  - Core/application/imu/**
   - Core/bsp/boards/can/** 
+  - Core/bsp/boards/dwt/** 
   - Core/bsp/boards/log/**
   - Core/bsp/boards/remote/**
   - component/devices/**
