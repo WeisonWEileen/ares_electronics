@@ -64,7 +64,7 @@ __weak void ADC_sample_Task(void const *argument);
 // extern void MotorTask(void const *argument);
 /* USER CODE END FunctionPrototypes */
 
-void StartDefaultTask(void const *argument);
+void StartDefaultTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 

@@ -80,6 +80,7 @@ includeDirectories:
   - Core/bsp/boards/can/**
   - Core/bsp/boards/dwt/**
   - Core/bsp/boards/log/**
+  - Core/bsp/boards/ist8310/**
   - Core/bsp/boards/remote/**
   - component/devices/**
   - Middlewares/Third_Party/SEGGER/RTT/**
@@ -99,6 +100,7 @@ sourceFiles:
   - Core/bsp/boards/can/** 
   - Core/bsp/boards/dwt/** 
   - Core/bsp/boards/log/**
+  - Core/bsp/boards/ist8310/**
   - Core/bsp/boards/remote/**
   - component/devices/**
   - Middlewares\Third_Party\SEGGER\RTT\SEGGER_RTT_printf.c

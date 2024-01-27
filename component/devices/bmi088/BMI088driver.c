@@ -5,7 +5,7 @@
 #include "bsp_log.h"
 #include <math.h>
 
-#pragma message "this is a legacy support. test the new BMI088 module as soon as possible."
+// #pragma message "this is a legacy support. test the new BMI088 module as soon as possible."
 
 float BMI088_ACCEL_SEN = BMI088_ACCEL_6G_SEN;
 float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
@@ -133,7 +133,7 @@ void Calibrate_MPU_Offset(IMU_Data_t *bmi088)
     {
         if (DWT_GetTimeline_s() - startTime > 12)
         {
-            // ��????
+            //如果机器人连续12秒没有计算出合理的IMU标定
             bmi088->GyroOffset[0] = GxOFFSET;
             bmi088->GyroOffset[1] = GyOFFSET;
             bmi088->GyroOffset[2] = GzOFFSET;
@@ -202,6 +202,7 @@ void Calibrate_MPU_Offset(IMU_Data_t *bmi088)
                 }
             }
 
+            //用于判断最大最小值，如果在校准过程中，机器人被移动，则seggrtt报错
             gNormDiff = gNormMax - gNormMin;
             for (uint8_t j = 0; j < 3; ++j)
                 gyroDiff[j] = gyroMax[j] - gyroMin[j];
@@ -237,7 +238,12 @@ void Calibrate_MPU_Offset(IMU_Data_t *bmi088)
              fabsf(bmi088->GyroOffset[1]) > 0.01f ||
              fabsf(bmi088->GyroOffset[2]) > 0.01f);
 
+
+    
     bmi088->AccelScale = 9.81f / bmi088->gNorm;
+    fp32 caliTime = DWT_GetTimeline_s() - startTime;
+
+    LOGINFO("bmi_init_for %d s \n", (int)(caliTime*10000));
 }
 
 uint8_t bmi088_accel_init(void)
@@ -408,6 +414,9 @@ void Imu_read_Task(void const *argument)
 {
     while (1)
     {
+        // TODO 目前还没有解决加速度的偏置，以及深圳所纬度的加速度的测定
+        // TODO 以及姿态解算！
+        // TODO 目前经常一次正常情况下BMI初始化失败，待分析具体原因，报错call not read ID
         BMI088_Read(&BMI088);
         DWT_Delay(0.001);
     }
