@@ -128,20 +128,20 @@ void Calibrate_MPU_Offset(IMU_Data_t *bmi088)
     float gyroMax[3], gyroMin[3];
     float gNormTemp = 0.0f, gNormMax = 0.0f, gNormMin = 0.0f;
 
-    startTime = DWT_GetTimeline_s();
+    startTime = DWT_GetTimeline_us();
     do
     {
-        if (DWT_GetTimeline_s() - startTime > 12)
-        {
-            //如果机器人连续12秒没有计算出合理的IMU标定
-            bmi088->GyroOffset[0] = GxOFFSET;
-            bmi088->GyroOffset[1] = GyOFFSET;
-            bmi088->GyroOffset[2] = GzOFFSET;
-            bmi088->gNorm = gNORM;
-            bmi088->TempWhenCali = 40;
-            LOGERROR("[BMI088] Calibrate Failed! Use offline params");
-            break;
-        }
+        // if (DWT_GetTimeline_s() - startTime > 12)
+        // {
+        //     //如果机器人连续12秒没有计算出合理的IMU标定
+        //     bmi088->GyroOffset[0] = GxOFFSET;
+        //     bmi088->GyroOffset[1] = GyOFFSET;
+        //     bmi088->GyroOffset[2] = GzOFFSET;
+        //     bmi088->gNorm = gNORM;
+        //     bmi088->TempWhenCali = 40;
+        //     LOGERROR("[BMI088] Calibrate Failed! Use offline params");
+        //     break;
+        // }
 
         DWT_Delay(0.005);
         bmi088->gNorm = 0;
@@ -241,9 +241,9 @@ void Calibrate_MPU_Offset(IMU_Data_t *bmi088)
 
     
     bmi088->AccelScale = 9.81f / bmi088->gNorm;
-    fp32 caliTime = DWT_GetTimeline_s() - startTime;
+    fp32 caliTime = DWT_GetTimeline_us() - startTime;
 
-    LOGINFO("bmi_init_for %d s \n", (int)(caliTime*10000));
+    LOGINFO("bmi_init_for %d us \n", (int)(caliTime));
 }
 
 uint8_t bmi088_accel_init(void)

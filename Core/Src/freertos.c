@@ -50,6 +50,7 @@ osThreadId led_blue_TaskHandle;
 osThreadId motor_run_TaskHandle;
 osThreadId imu_read_TaskHandle;
 osThreadId adc_sample_TaskHandle;
+osThreadId pwm_led_TaskHandle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
@@ -59,17 +60,19 @@ __weak void LED_Blue_Task(void const *argument);
 __weak void MotorTask(void const *argument);
 __weak void Imu_read_Task(void const *argument);
 __weak void ADC_sample_Task(void const *argument);
+__weak void PWM_led_Task(void const *argument);
+__weak void PWM_buzzer_Task(void const *argument);
 
 // extern void Imu_read_Task(void const *argument);
 // extern void MotorTask(void const *argument);
 /* USER CODE END FunctionPrototypes */
 
-void StartDefaultTask(void const * argument);
+void StartDefaultTask(void const *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* GetIdleTaskMemory prototype (linked to static allocation support) */
-void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize );
+void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize);
 
 /* USER CODE BEGIN GET_IDLE_TASK_MEMORY */
 static StaticTask_t xIdleTaskTCBBuffer;
@@ -85,11 +88,12 @@ void vApplicationGetIdleTaskMemory(StaticTask_t **ppxIdleTaskTCBBuffer, StackTyp
 /* USER CODE END GET_IDLE_TASK_MEMORY */
 
 /**
-  * @brief  FreeRTOS initialization
-  * @param  None
-  * @retval None
-  */
-void MX_FREERTOS_Init(void) {
+ * @brief  FreeRTOS initialization
+ * @param  None
+ * @retval None
+ */
+void MX_FREERTOS_Init(void)
+{
   /* USER CODE BEGIN Init */
 
   /* USER CODE END Init */
@@ -125,20 +129,26 @@ void MX_FREERTOS_Init(void) {
   // led_blue_TaskHandle = osThreadCreate(osThread(LED_Task_Blue), NULL);
 
   /* definition and creation of motor_ang_task */
-  osThreadDef(motor_ang_task, MotorTask, osPriorityAboveNormal, 0, 128);
-  motor_run_TaskHandle = osThreadCreate(osThread(motor_ang_task), NULL);
+  // osThreadDef(motor_ang_task, MotorTask, osPriorityAboveNormal, 0, 128);
+  // motor_run_TaskHandle = osThreadCreate(osThread(motor_ang_task), NULL);
 
   /* definition and creation of imu_read_Task */
-  osThreadDef(imu_read_Task, Imu_read_Task, osPriorityNormal, 0, 128);
-  imu_read_TaskHandle = osThreadCreate(osThread(imu_read_Task), NULL);
+  // osThreadDef(imu_read_Task, Imu_read_Task, osPriorityNormal, 0, 128);
+  // imu_read_TaskHandle = osThreadCreate(osThread(imu_read_Task), NULL);
 
   /* definition and creation of ADC_sample_Task */
   // osThreadDef(adc_sample_Task, ADC_sample_Task, osPriorityNormal, 0, 128);
   // adc_sample_TaskHandle = osThreadCreate(osThread(adc_sample_Task), NULL);
 
+  /* definition and creation of LED_PWM_Task */
+  osThreadDef(pwm_led, PWM_led_Task, osPriorityNormal, 0, 128);
+  pwm_led_TaskHandle = osThreadCreate(osThread(pwm_led), NULL);
+
+  /* definition and creation of LED_PWM_Task */
+  // osThreadDef(pwm_buzzer, PWM_buzzer_Task, osPriorityNormal, 0, 128);
+  // pwm_led_TaskHandle = osThreadCreate(osThread(pwm_buzzer), NULL);
 
   /* USER CODE END RTOS_THREADS */
-
 }
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -148,7 +158,7 @@ void MX_FREERTOS_Init(void) {
  * @retval None
  */
 /* USER CODE END Header_StartDefaultTask */
-void StartDefaultTask(void const * argument)
+void StartDefaultTask(void const *argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
   /* Infinite loop */
@@ -183,6 +193,20 @@ __weak void Imu_read_Task(void const *argument)
   }
 }
 __weak void ADC_sample_Task(void const *argument)
+{
+  for (;;)
+  {
+    osDelay(1);
+  }
+}
+__weak void PWM_led_Task(void const *argument)
+{
+  for (;;)
+  {
+    osDelay(1);
+  }
+}
+__weak void PWM_buzzer_Task(void const *argument)
 {
   for (;;)
   {

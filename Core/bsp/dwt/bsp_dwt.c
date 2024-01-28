@@ -26,7 +26,7 @@ static uint64_t CYCCNT64;
  *
  */
 static void DWT_CNT_Update(void)
-{
+{ 
     static volatile uint8_t bit_locker = 0;
     if (!bit_locker)
     {
@@ -123,7 +123,9 @@ uint64_t DWT_GetTimeline_us(void)
 
     return DWT_Timelinef32;
 }
-
+/*
+* @brief DWT延时函数,单位为秒/s
+*/
 void DWT_Delay(float Delay)
 {
     uint32_t tickstart = DWT->CYCCNT;

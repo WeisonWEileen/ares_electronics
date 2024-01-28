@@ -25,6 +25,7 @@
 #include "dma.h"
 #include "i2c.h"
 #include "spi.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -37,6 +38,9 @@
 #include "adc_sample.h"
 #include "ist8310driver.h"
 #include "ist8310driver_middleware.h"
+#include "bsp_log.h"
+#include "bsp_dwt.h"
+#include "pwm.h"
 
 // #include "MotorTask."
 /* USER CODE END Includes */
@@ -48,7 +52,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-extern void init_calibrate_BMI088(void);
 extern SPI_HandleTypeDef hspi1;
 /* USER CODE END PD */
 
@@ -111,17 +114,21 @@ int main(void)
   MX_ADC3_Init();
   MX_ADC1_Init();
   MX_I2C3_Init();
+  MX_TIM5_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-  can_filter_init();
-  SBUS_IT_Open();
-  init_vrefint_reciprocal();
-  ist8310_init();
+  DWT_Init(168);        //初始化DWT
+  BSPLogInit(); //初始化segger rtt打印功能
+  can_filter_init(); // 初始化can滤波�?
+  SBUS_IT_Open();    // 初始化遥控器
+  init_vrefint_reciprocal(); // 初始化电压读�?
+  // ist8310_init(); //暂时不需要磁力计
+  pwm_init();
 
-
-  while (BMI088Init(&hspi1,1)) //标定IMU
-  {
-    ;
-  }
+  // while (BMI088Init(&hspi1, 1)) // 初始化以及标定IMU
+  // {
+  //   ;
+  // }
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

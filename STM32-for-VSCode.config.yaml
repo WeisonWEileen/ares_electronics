@@ -77,11 +77,12 @@ includeDirectories:
   - Core/Lib/**
   - Core/application/**
   - Core/application/imu/**
-  - Core/bsp/boards/can/**
-  - Core/bsp/boards/dwt/**
-  - Core/bsp/boards/log/**
-  - Core/bsp/boards/ist8310/**
-  - Core/bsp/boards/remote/**
+  - Core/bsp/can/**
+  - Core/bsp/dwt/**
+  - Core/bsp/log/**
+  - Core/bsp/ist8310/**
+  - Core/bsp/remote/**
+  - Core/bsp/pwm/**
   - component/devices/**
   - Middlewares/Third_Party/SEGGER/RTT/**
 
@@ -97,14 +98,16 @@ sourceFiles:
   - Core/Lib/**
   - Core/application/**
   - Core/application/imu/**
-  - Core/bsp/boards/can/** 
-  - Core/bsp/boards/dwt/** 
-  - Core/bsp/boards/log/**
-  - Core/bsp/boards/ist8310/**
-  - Core/bsp/boards/remote/**
+  - Core/bsp/dwt/** 
+  - Core/bsp/can/** 
+  - Core/bsp/log/**
+  - Core/bsp/ist8310/**
+  - Core/bsp/remote/**
+  - Core/bsp/pwm/**
   - component/devices/**
   - Middlewares\Third_Party\SEGGER\RTT\SEGGER_RTT_printf.c
   - Middlewares\Third_Party\SEGGER\RTT\SEGGER_RTT.c
+  - Core\application\pwm\**
 
 # When no makefile is present it will show a warning pop-up.
 # However when compilation without the CubeMX Makefile is desired, this can be turned of.

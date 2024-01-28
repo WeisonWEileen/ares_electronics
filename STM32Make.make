@@ -48,6 +48,7 @@ Core/Src/stm32f4xx_hal_msp.c \
 Core/Src/stm32f4xx_hal_timebase_tim.c \
 Core/Src/stm32f4xx_it.c \
 Core/Src/system_stm32f4xx.c \
+Core/Src/tim.c \
 Core/Src/usart.c \
 Core/application/CAN_receive.c \
 Core/application/LED_Task.c \
@@ -55,12 +56,13 @@ Core/application/MotorTask.c \
 Core/application/UsartTask.c \
 Core/application/adc_sample.c \
 Core/application/pid.c \
-Core/bsp/boards/can/bsp_can.c \
-Core/bsp/boards/dwt/bsp_dwt.c \
-Core/bsp/boards/ist8310/ist8310driver.c \
-Core/bsp/boards/ist8310/ist8310driver_middleware.c \
-Core/bsp/boards/log/bsp_log.c \
-Core/bsp/boards/remote/remote.c \
+Core/bsp/can/bsp_can.c \
+Core/bsp/dwt/bsp_dwt.c \
+Core/bsp/ist8310/ist8310driver.c \
+Core/bsp/ist8310/ist8310driver_middleware.c \
+Core/bsp/log/bsp_log.c \
+Core/bsp/pwm/pwm.c \
+Core/bsp/remote/remote.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c \
@@ -171,11 +173,12 @@ AS_INCLUDES = \
 C_INCLUDES =  \
 -ICore/Inc \
 -ICore/application \
--ICore/bsp/boards/can \
--ICore/bsp/boards/dwt \
--ICore/bsp/boards/ist8310 \
--ICore/bsp/boards/log \
--ICore/bsp/boards/remote \
+-ICore/bsp/can \
+-ICore/bsp/dwt \
+-ICore/bsp/ist8310 \
+-ICore/bsp/log \
+-ICore/bsp/pwm \
+-ICore/bsp/remote \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \
