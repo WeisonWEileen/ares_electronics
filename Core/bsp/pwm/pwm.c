@@ -11,7 +11,7 @@ uint32_t psc=0,state=0;
 
 void pwm_init(void)
 {
-    HAL_TIM_Base_Start_IT(&htim5);           //开启定时器,为什么是中断模式?
+    HAL_TIM_Base_Start(&htim5);           //开启定时器,为什么是中断模式?
     HAL_TIM_PWM_Start(&htim5, TIM_CHANNEL_1); //rgb的三个灯的PWM产生命令
     HAL_TIM_PWM_Start(&htim5, TIM_CHANNEL_2);
     HAL_TIM_PWM_Start(&htim5, TIM_CHANNEL_3);
@@ -53,3 +53,5 @@ void PWM_buzzer_Task(void const *argument)
         osDelay(1000);
     }
 }
+
+//TODO 融入到初始化失败中,buzzer响

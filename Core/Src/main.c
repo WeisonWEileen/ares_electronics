@@ -27,6 +27,7 @@
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
+#include "usb_device.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -36,11 +37,12 @@
 #include "BMI088driver.h"
 #include "remote.h"
 #include "adc_sample.h"
-#include "ist8310driver.h"
-#include "ist8310driver_middleware.h"
+// #include "ist8310driver.h"
+// #include "ist8310driver_middleware.h"
 #include "bsp_log.h"
 #include "bsp_dwt.h"
 #include "pwm.h"
+#include "MotorTask.h"
 
 // #include "MotorTask."
 /* USER CODE END Includes */
@@ -116,19 +118,25 @@ int main(void)
   MX_I2C3_Init();
   MX_TIM5_Init();
   MX_TIM4_Init();
+  MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
+
+
+  //这里后面要封装好
+
+  motor_data_init(); // desireRpm = 0
   DWT_Init(168);        //初始化DWT
-  BSPLogInit(); //初始化segger rtt打印功能
-  can_filter_init(); // 初始化can滤波�?
-  SBUS_IT_Open();    // 初始化遥控器
-  init_vrefint_reciprocal(); // 初始化电压读�?
+  // BSPLogInit(); //初始化segger rtt打印功能
+  can_filter_init(); // 初始化can滤波
+  // SBUS_IT_Open();    // 初始化遥控器
+  // init_vrefint_reciprocal(); // 初始化电�????
   // ist8310_init(); //暂时不需要磁力计
   pwm_init();
 
-  // while (BMI088Init(&hspi1, 1)) // 初始化以及标定IMU
-  // {
-  //   ;
-  // }
+  while (BMI088Init(&hspi1, 1) != BMI088_NO_ERROR) // 初始化以及标定IMU
+  {
+    ;
+  }
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */
@@ -175,7 +183,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLM = 6;
   RCC_OscInitStruct.PLL.PLLN = 168;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 4;
+  RCC_OscInitStruct.PLL.PLLQ = 7;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();

@@ -1,0 +1,29 @@
+{
+    "stm32-for-vscode.openOCDPath": "C:\\USERS\\PW705\\APPDATA\\ROAMING\\CODE\\USER\\GLOBALSTORAGE\\BMD.STM32-FOR-VSCODE\\@XPACK-DEV-TOOLS\\OPENOCD\\0.12.0-2.1\\.CONTENT\\BIN\\OPENOCD.EXE",
+    "stm32-for-vscode.makePath": "C:\\USERS\\PW705\\APPDATA\\ROAMING\\CODE\\USER\\GLOBALSTORAGE\\BMD.STM32-FOR-VSCODE\\@XPACK-DEV-TOOLS\\WINDOWS-BUILD-TOOLS\\4.4.0-1.1\\.CONTENT\\BIN\\MAKE.EXE",
+    "stm32-for-vscode.armToolchainPath": "c:\\Users\\pw705\\AppData\\Roaming\\Code\\User\\globalStorage\\bmd.stm32-for-vscode\\@xpack-dev-tools\\arm-none-eabi-gcc\\12.3.1-1.2.1\\.content\\bin",
+    "cortex-debug.armToolchainPath": "c:\\Users\\pw705\\AppData\\Roaming\\Code\\User\\globalStorage\\bmd.stm32-for-vscode\\@xpack-dev-tools\\arm-none-eabi-gcc\\12.3.1-1.2.1\\.content\\bin",
+    "cortex-debug.openocdPath": "C:\\USERS\\PW705\\APPDATA\\ROAMING\\CODE\\USER\\GLOBALSTORAGE\\BMD.STM32-FOR-VSCODE\\@XPACK-DEV-TOOLS\\OPENOCD\\0.12.0-2.1\\.CONTENT\\BIN\\OPENOCD.EXE",
+    "files.associations": {
+        "main.h": "c",
+        "struct_typedef.h": "c",
+        "can_receive.h": "c",
+        "motortask.h": "c",
+        "usart.h": "c",
+        "cmsis_os.h": "c",
+        "pid.h": "c",
+        "bmi088driver.h": "c",
+        "freertos.h": "c",
+        "bmi088reg.h": "c",
+        "bmi088middleware.h": "c",
+        "bsp_log.h": "c",
+        "remote.h": "c",
+        "bsp_can.h": "c",
+        "spi.h": "c",
+        "bsp_dwt.h": "c",
+        "ist8310driver.h": "c",
+        "master_machine.h": "c",
+        "bsp_imu_pwm.h": "c",
+        "imu_temp_control_task.h": "c"
+    }
+}

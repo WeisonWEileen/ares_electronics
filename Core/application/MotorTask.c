@@ -7,7 +7,7 @@
 
 motor_run_data_t motor_3508[4]; // 电机驱动电机运动的数据
 chassis_move_t chassis_vxyz;
-extern void sbus_to_rpm(void);
+// extern void sbus_to_rpm(void);
 
 /**
  * @brief          电机转动任务，freertos种调用
@@ -17,7 +17,6 @@ extern void sbus_to_rpm(void);
 void MotorTask(void const *argument)
 {
     vTaskDelay(100); // delay一下，让canReceive里面的数据先解算
-    motor_data_init(); //desireRpm = 0
     // motor_3508[0].ang_pid.PID_reset(&motor_3508[0].ang_pid, 0.08, 0, 2);
     // motor_3508[0].pid.PID_reset(&motor_3508[0].pid, 6, 0.01, 0.1);
     //防止开始前已经有can累计
@@ -33,7 +32,7 @@ void MotorTask(void const *argument)
         }
         
         CAN_cmd_chassis(motor_3508[0].pid.Output, motor_3508[1].pid.Output, motor_3508[2].pid.Output, motor_3508[3].pid.Output);
-        vTaskDelay(1);
+        vTaskDelay(2);
 
         // // 双环pid，先算外环的角度的输出，@to do没调明白
         // PID_Calculate(&motor_3508[0].ang_pid, motor_3508[0].accumAngle, motor_3508[0].desireAngle);
@@ -51,7 +50,20 @@ void MotorTask(void const *argument)
 void motor_data_init(void)
 {
     // 给电机3000的目标转速
-    for (int i = 0; i < 4 ; i++)
+    PID_Init_Config chasis_3508_config = {
+        .maxOut = 9600,
+        .integralLimit = 3000,
+        .deadband = 3,
+        .kp = 6,
+        .ki = 0,
+        .kd = 0.1,
+        .A = 100,
+        .B = 100,
+        .output_filtering_coefficient = 0.02,
+        .derivative_filtering_coefficient = 0.02,
+        .improve = NONE
+    }; 
+    for (int i = 0; i < 4; i++)
     {
         motor_3508[i].desireRpm = motor_3508[i].realRpm = motor_3508[i].desireAngle = 0;
     }
@@ -59,7 +71,7 @@ void motor_data_init(void)
     for (int i = 0; i < 4 ; i++)
     {
         // PID_Init(&motor_3508[i].ang_pid, 9600, 3000, 0.03, 1, 0, 0, 100, 100, 0.02, 0.02, NONE);
-        PID_Init(&motor_3508[i].pid, 9600, 3000, 3, 6, 0, 0.1, 100, 100, 0.02, 0.02, NONE);
+        PID_Init(&motor_3508[i].pid, &chasis_3508_config);
     }
 }
 

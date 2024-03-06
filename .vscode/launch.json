@@ -1,0 +1,57 @@
+{
+    "configurations": [
+        {
+            "showDevDebugOutput": "parsed",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/weison.elf",
+            "name": "Debug STM32",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "preLaunchTask": "Build STM",
+            "device": "stm32f407",
+            "configFiles": [
+                "openocd.cfg"
+            ],
+            "svdFile": "STM32F407.svd",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 1
+            },
+            "rttConfig": {
+                "enabled": true,
+                //搜索的内存地址
+                "address": "0x20000000",
+                //内存芯片手册上写的大小是128+64，其中128是sram，64是ccm，到底应该用哪个
+                //      目前的搜索是采用 1024×128，目前是找到了control block的了，是够的
+                "searchSize": 131072,
+                "rtt_start_retry": 10000,
+                "searchId": "SEGGER RTT",
+                "clearSearch": false,
+                "polling_interval": 20,
+                "decoders": [
+                    {
+                        "label": "",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            }
+        },
+        {
+            "showDevDebugOutput": "parsed",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/weison.elf",
+            "name": "Attach STM32",
+            "request": "attach",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "preLaunchTask": "Build STM",
+            "device": "stm32f407",
+            "configFiles": [
+                "openocd.cfg"
+            ],
+            "svdFile": "STM32F407.svd"
+        }
+    ]
+}

@@ -73,6 +73,7 @@ includeDirectories:
   - Core/Inc/**
   - Core/Lib/**
   - Src/**
+  - Core/bsp/bmi088/**
   - Core/Src/**
   - Core/Lib/**
   - Core/application/**
@@ -83,8 +84,12 @@ includeDirectories:
   - Core/bsp/ist8310/**
   - Core/bsp/remote/**
   - Core/bsp/pwm/**
-  - component/devices/**
+  - Core/bsp/imu_pwm_control/**
+  - Core/bsp**
   - Middlewares/Third_Party/SEGGER/RTT/**
+  - USB_DEVICE/**
+  
+
 
 
 # Files that should be included in the compilation.
@@ -96,6 +101,7 @@ sourceFiles:
   - Src/**
   - Core/Src/**
   - Core/Lib/**
+  - Core/bsp/bmi088/**
   - Core/application/**
   - Core/application/imu/**
   - Core/bsp/dwt/** 
@@ -104,10 +110,12 @@ sourceFiles:
   - Core/bsp/ist8310/**
   - Core/bsp/remote/**
   - Core/bsp/pwm/**
-  - component/devices/**
+  - Core/bsp/imu_pwm_control/**
+  - Core/bsp**
   - Middlewares\Third_Party\SEGGER\RTT\SEGGER_RTT_printf.c
   - Middlewares\Third_Party\SEGGER\RTT\SEGGER_RTT.c
   - Core\application\pwm\**
+  - USB_DEVICE\**
 
 # When no makefile is present it will show a warning pop-up.
 # However when compilation without the CubeMX Makefile is desired, this can be turned of.

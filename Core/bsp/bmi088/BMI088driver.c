@@ -410,17 +410,6 @@ static void BMI088_read_muli_reg(uint8_t reg, uint8_t *buf, uint8_t len)
     }
 }
 
-void Imu_read_Task(void const *argument)
-{
-    while (1)
-    {
-        // TODO 目前还没有解决加速度的偏置，以及深圳所纬度的加速度的测定
-        // TODO 以及姿态解算！
-        // TODO 目前经常一次正常情况下BMI初始化失败，待分析具体原因，报错call not read ID
-        BMI088_Read(&BMI088);
-        DWT_Delay(0.001);
-    }
-}
 
 #elif defined(BMI088_USE_IIC)
 

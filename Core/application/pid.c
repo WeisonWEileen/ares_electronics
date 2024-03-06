@@ -245,23 +245,12 @@ void f_PID_ErrorHandle(PID_TypeDef *pid)
 /*****************PID structure initialize*********************/
 void PID_Init(
     PID_TypeDef *pid,
-    uint16_t max_out,
-    uint16_t intergral_limit,
-    fp32 deadband,
-
-    fp32 kp,
-    fp32 Ki,
-    fp32 Kd,
-
-    fp32 A,
-    fp32 B,
-
-    fp32 output_filtering_coefficient,
-    fp32 derivative_filtering_coefficient,
-    uint8_t improve)
+    PID_Init_Config *pid_config)
 {
     pid->PID_param_init = f_PID_param_init;
     pid->PID_reset = f_PID_reset;
-    pid->PID_param_init(pid, max_out, intergral_limit, deadband,
-                        kp, Ki, Kd, A, B, output_filtering_coefficient, derivative_filtering_coefficient, improve);
+    pid->PID_param_init(pid, pid_config->maxOut, pid_config->integralLimit, pid_config->deadband,
+                        pid_config->kp, pid_config->ki, pid_config->kd, pid_config->A, pid_config->B,
+                        pid_config->output_filtering_coefficient, pid_config->derivative_filtering_coefficient,
+                        pid_config->improve);
 }

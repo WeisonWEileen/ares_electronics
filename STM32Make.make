@@ -56,8 +56,12 @@ Core/application/MotorTask.c \
 Core/application/UsartTask.c \
 Core/application/adc_sample.c \
 Core/application/pid.c \
+Core/bsp/bmi088/BMI088Middleware.c \
+Core/bsp/bmi088/BMI088driver.c \
 Core/bsp/can/bsp_can.c \
 Core/bsp/dwt/bsp_dwt.c \
+Core/bsp/imu_pwm_control/bsp_imu_pwm.c \
+Core/bsp/imu_pwm_control/imu_temp_control_task.c \
 Core/bsp/ist8310/ist8310driver.c \
 Core/bsp/ist8310/ist8310driver_middleware.c \
 Core/bsp/log/bsp_log.c \
@@ -77,6 +81,8 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c_ex.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c \
@@ -86,6 +92,11 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_adc.c \
+Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c \
+Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c \
+Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c \
+Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c \
+Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c \
 Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.c \
 Middlewares/Third_Party/FreeRTOS/Source/croutine.c \
 Middlewares/Third_Party/FreeRTOS/Source/event_groups.c \
@@ -98,8 +109,10 @@ Middlewares/Third_Party/FreeRTOS/Source/tasks.c \
 Middlewares/Third_Party/FreeRTOS/Source/timers.c \
 Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT.c \
 Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT_printf.c \
-component/devices/bmi088/BMI088Middleware.c \
-component/devices/bmi088/BMI088driver.c
+USB_DEVICE/App/usb_device.c \
+USB_DEVICE/App/usbd_cdc_if.c \
+USB_DEVICE/App/usbd_desc.c \
+USB_DEVICE/Target/usbd_conf.c
 
 
 CPP_SOURCES = \
@@ -173,8 +186,10 @@ AS_INCLUDES = \
 C_INCLUDES =  \
 -ICore/Inc \
 -ICore/application \
+-ICore/bsp/bmi088 \
 -ICore/bsp/can \
 -ICore/bsp/dwt \
+-ICore/bsp/imu_pwm_control \
 -ICore/bsp/ist8310 \
 -ICore/bsp/log \
 -ICore/bsp/pwm \
@@ -183,11 +198,14 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Include \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
+-IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc \
+-IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS \
 -IMiddlewares/Third_Party/FreeRTOS/Source/include \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 -IMiddlewares/Third_Party/SEGGER/RTT \
--Icomponent/devices/bmi088
+-IUSB_DEVICE/App \
+-IUSB_DEVICE/Target
 
 
 

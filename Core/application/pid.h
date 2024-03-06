@@ -1,15 +1,15 @@
 /**
-  ******************************************************************************
-  * @file	 pid.h
-  * @author  Hongxi Wong
-  * @version V1.0.6
-  * @date    2019/12/17
-  * @brief   
-  ******************************************************************************
-  * @attention
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file	 pid.h
+ * @author  Hongxi Wong
+ * @version V1.0.6
+ * @date    2019/12/17
+ * @brief
+ ******************************************************************************
+ * @attention
+ *
+ ******************************************************************************
+ */
 #ifndef _PID_H
 #define _PID_H
 
@@ -20,15 +20,15 @@
 
 typedef enum pid_Improvement_e
 {
-    NONE = 0X00,                        //0000 0000
-    Integral_Limit = 0x01,              //0000 0001
-    Derivative_On_Measurement = 0x02,   //0000 0010
-    Trapezoid_Intergral = 0x04,         //0000 0100
-    Proportional_On_Measurement = 0x08, //0000 1000
-    OutputFilter = 0x10,                //0001 0000
-    ChangingIntegralRate = 0x20,        //0010 0000
-    DerivativeFilter = 0x40,            //0100 0000
-    ErrorHandle = 0x80,                 //1000 0000
+    NONE = 0X00,                        // 0000 0000
+    Integral_Limit = 0x01,              // 0000 0001
+    Derivative_On_Measurement = 0x02,   // 0000 0010
+    Trapezoid_Intergral = 0x04,         // 0000 0100
+    Proportional_On_Measurement = 0x08, // 0000 1000
+    OutputFilter = 0x10,                // 0001 0000
+    ChangingIntegralRate = 0x20,        // 0010 0000
+    DerivativeFilter = 0x40,            // 0100 0000
+    ErrorHandle = 0x80,                 // 1000 0000
 } PID_Improvement_e;
 
 typedef enum errorType_e
@@ -70,8 +70,8 @@ typedef struct _PID_TypeDef
     fp32 DeadBand;
     fp32 ControlPeriod;
     fp32 MaxErr;
-    fp32 ScalarA; //For Changing Integral
-    fp32 ScalarB; //ITerm = Err*((A-abs(err)+B)/A)  when B<|err|<A+B
+    fp32 ScalarA; // For Changing Integral
+    fp32 ScalarB; // ITerm = Err*((A-abs(err)+B)/A)  when B<|err|<A+B
     fp32 Output_Filtering_Coefficient;
     fp32 Derivative_Filtering_Coefficient;
 
@@ -114,23 +114,24 @@ extern void f_Output_Limit(PID_TypeDef *pid);
 extern void f_Proportion_Limit(PID_TypeDef *pid);
 extern void f_PID_ErrorHandle(PID_TypeDef *pid);
 
+typedef struct
+{
+    uint16_t maxOut;
+    uint16_t integralLimit;
+    fp32 deadband;
+    fp32 kp;
+    fp32 ki;
+    fp32 kd;
+    fp32 A;
+    fp32 B;
+    fp32 output_filtering_coefficient;
+    fp32 derivative_filtering_coefficient;
+    uint8_t improve;
+} PID_Init_Config;
+
 void PID_Init(
     PID_TypeDef *pid,
-    uint16_t max_out,
-    uint16_t intergral_limit,
-    fp32 deadband,
-
-    fp32 kp,
-    fp32 ki,
-    fp32 kd,
-
-    fp32 A,
-    fp32 B,
-
-    fp32 output_filtering_coefficient,
-    fp32 derivative_filtering_coefficient,
-
-    uint8_t improve);
+    PID_Init_Config *pid_config);
 fp32 PID_Calculate(PID_TypeDef *pid, fp32 measure, fp32 target);
-		
+
 #endif
