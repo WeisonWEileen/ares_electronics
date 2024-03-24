@@ -31,6 +31,8 @@
         "master_process.h": "c",
         "stm32f4xx.h": "c",
         "usbd_cdc_if.h": "c",
-        "ares_protocol.h": "c"
+        "ares_protocol.h": "c",
+        "core_cm7.h": "c",
+        "segger_rtt_conf.h": "c"
     }
 }

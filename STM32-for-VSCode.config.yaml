@@ -90,6 +90,10 @@ includeDirectories:
   - USB_DEVICE/**
   - Core/modules/**
   - Core/bsp/usb/**
+  - Core/algorithm/**
+  - Middlewares/ST/ARM/DSP/Inc/**
+  - application/**
+
   
 
 
@@ -113,13 +117,16 @@ sourceFiles:
   - Core/bsp/remote/**
   - Core/bsp/pwm/**
   - Core/bsp/imu_pwm_control/**
-  - Core/bsp**
-  - Middlewares\Third_Party\SEGGER\RTT\SEGGER_RTT_printf.c
-  - Middlewares\Third_Party\SEGGER\RTT\SEGGER_RTT.c
+  - Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT_printf.c
+  - Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT.c
   - Core\application\pwm\**
   - USB_DEVICE\**
   - Core/modules/**
   - Core/bsp/usb/**
+  - Core/algorithm/**
+  - Middlewares/ST/ARM/DSP/Inc/**
+  - application/**
+    
 
 
 # When no makefile is present it will show a warning pop-up.

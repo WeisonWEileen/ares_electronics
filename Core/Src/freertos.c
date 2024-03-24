@@ -52,6 +52,7 @@ osThreadId motor_run_TaskHandle;
 osThreadId imu_read_write_TaskHandle;
 osThreadId adc_sample_TaskHandle;
 osThreadId pwm_led_TaskHandle;
+osThreadId ins_task_TaskHandle;
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
 
@@ -63,6 +64,8 @@ __weak void Imu_read_temp_Task(void const *argument);
 __weak void ADC_sample_Task(void const *argument);
 __weak void PWM_led_Task(void const *argument);
 __weak void PWM_buzzer_Task(void const *argument);
+__weak void Ins_Task(void const *argument);
+__weak void StartINSTASK(void const *argument);
 
 // extern void Imu_read_temp_Task(void const *argument);
 // extern void MotorTask(void const *argument);
@@ -150,6 +153,10 @@ void MX_FREERTOS_Init(void) {
   pwm_led_TaskHandle = osThreadCreate(osThread(pwm_led), NULL);
 
   /* definition and creation of LED_PWM_Task */
+  osThreadDef(ins_task, StartINSTASK, osPriorityHigh, 0, 128 * 8);
+  ins_task_TaskHandle = osThreadCreate(osThread(ins_task), NULL);
+
+  /* definition and creation of LED_PWM_Task */
   // osThreadDef(pwm_buzzer, PWM_buzzer_Task, osPriorityNormal, 0, 128);
   // pwm_led_TaskHandle = osThreadCreate(osThread(pwm_buzzer), NULL);
 
@@ -212,6 +219,13 @@ __weak void PWM_led_Task(void const *argument)
   }
 }
 __weak void PWM_buzzer_Task(void const *argument)
+{
+  for (;;)
+  {
+    osDelay(1);
+  }
+}
+__weak void StartINSTASK(void const *argument)
 {
   for (;;)
   {

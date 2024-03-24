@@ -50,6 +50,10 @@ Core/Src/stm32f4xx_it.c \
 Core/Src/system_stm32f4xx.c \
 Core/Src/tim.c \
 Core/Src/usart.c \
+Core/algorithm/QuaternionEKF.c \
+Core/algorithm/controller.c \
+Core/algorithm/kalman_filter.c \
+Core/algorithm/user_lib.c \
 Core/application/CAN_receive.c \
 Core/application/LED_Task.c \
 Core/application/MotorTask.c \
@@ -58,6 +62,7 @@ Core/application/adc_sample.c \
 Core/application/pid.c \
 Core/bsp/bmi088/BMI088Middleware.c \
 Core/bsp/bmi088/BMI088driver.c \
+Core/bsp/bmi088/ins_task.c \
 Core/bsp/can/bsp_can.c \
 Core/bsp/dwt/bsp_dwt.c \
 Core/bsp/imu_pwm_control/bsp_imu_pwm.c \
@@ -118,7 +123,8 @@ Middlewares/Third_Party/SEGGER/RTT/SEGGER_RTT_printf.c \
 USB_DEVICE/App/usb_device.c \
 USB_DEVICE/App/usbd_cdc_if.c \
 USB_DEVICE/App/usbd_desc.c \
-USB_DEVICE/Target/usbd_conf.c
+USB_DEVICE/Target/usbd_conf.c \
+application/robot.c
 
 
 CPP_SOURCES = \
@@ -175,12 +181,14 @@ AS_DEFS =
 
 # C defines
 C_DEFS =  \
+-DARM_MATH_CM4 \
 -DSTM32F407xx \
 -DUSE_HAL_DRIVER
 
 
 # CXX defines
 CXX_DEFS =  \
+-DARM_MATH_CM4 \
 -DSTM32F407xx \
 -DUSE_HAL_DRIVER
 
@@ -191,6 +199,7 @@ AS_INCLUDES = \
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
+-ICore/algorithm \
 -ICore/application \
 -ICore/bsp/bmi088 \
 -ICore/bsp/can \
@@ -206,6 +215,7 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Include \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
+-IMiddlewares/ST/ARM/DSP/Inc \
 -IMiddlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc \
 -IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc \
 -IMiddlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS \
@@ -213,7 +223,8 @@ C_INCLUDES =  \
 -IMiddlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F \
 -IMiddlewares/Third_Party/SEGGER/RTT \
 -IUSB_DEVICE/App \
--IUSB_DEVICE/Target
+-IUSB_DEVICE/Target \
+-Iapplication
 
 
 
@@ -245,8 +256,9 @@ CXXFLAGS += -MMD -MP -MF"$(@:%.o=%.d)"
 LDSCRIPT = STM32F407IGHx_FLASH.ld
 
 # libraries
-LIBS = -lc -lm -lnosys 
+LIBS = -l:libarm_cortexM4lf_math.a -lc -lm -lnosys 
 LIBDIR = \
+-LMiddlewares/ST/ARM/DSP/Lib
 
 
 # Additional LD Flags from config file

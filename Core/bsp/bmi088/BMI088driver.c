@@ -311,7 +311,7 @@ uint8_t bmi088_gyro_init(void)
     // check the "who am I"
     if (res != BMI088_GYRO_CHIP_ID_VALUE)
     {
-        LOGERROR("[bmi088] Can not read bmi088 gyro chip id");
+        // LOGERROR("[bmi088] Can not read bmi088 gyro chip id");
         return BMI088_NO_SENSOR;
     }
 
