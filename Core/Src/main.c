@@ -129,14 +129,15 @@ int main(void)
   // BSPLogInit(); //初始化segger rtt打印功能
   can_filter_init(); // 初始化can滤波
   // SBUS_IT_Open();    // 初始化遥控器
-  // init_vrefint_reciprocal(); // 初始化电�????
+  // init_vrefint_reciprocal(); // 初始化电�????
+  
   // ist8310_init(); //暂时不需要磁力计
   pwm_init();
 
-  while (BMI088Init(&hspi1, 1) != BMI088_NO_ERROR) // 初始化以及标定IMU
-  {
-    ;
-  }
+  // while (BMI088Init(&hspi1, 1) != BMI088_NO_ERROR) // 初始化以及标定IMU
+  // {
+  //   ;
+  // }
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

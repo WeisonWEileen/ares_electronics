@@ -67,6 +67,12 @@ Core/bsp/ist8310/ist8310driver_middleware.c \
 Core/bsp/log/bsp_log.c \
 Core/bsp/pwm/pwm.c \
 Core/bsp/remote/remote.c \
+Core/bsp/usb/ares_protocol.c \
+Core/bsp/usb/bsp_usb.c \
+Core/bsp/usb/master_process.c \
+Core/modules/crc.c \
+Core/modules/crc16.c \
+Core/modules/crc8.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_adc_ex.c \
@@ -194,6 +200,8 @@ C_INCLUDES =  \
 -ICore/bsp/log \
 -ICore/bsp/pwm \
 -ICore/bsp/remote \
+-ICore/bsp/usb \
+-ICore/modules \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \

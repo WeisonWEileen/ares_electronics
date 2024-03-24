@@ -88,6 +88,8 @@ includeDirectories:
   - Core/bsp**
   - Middlewares/Third_Party/SEGGER/RTT/**
   - USB_DEVICE/**
+  - Core/modules/**
+  - Core/bsp/usb/**
   
 
 
@@ -116,6 +118,9 @@ sourceFiles:
   - Middlewares\Third_Party\SEGGER\RTT\SEGGER_RTT.c
   - Core\application\pwm\**
   - USB_DEVICE\**
+  - Core/modules/**
+  - Core/bsp/usb/**
+
 
 # When no makefile is present it will show a warning pop-up.
 # However when compilation without the CubeMX Makefile is desired, this can be turned of.

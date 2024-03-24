@@ -24,6 +24,13 @@
         "ist8310driver.h": "c",
         "master_machine.h": "c",
         "bsp_imu_pwm.h": "c",
-        "imu_temp_control_task.h": "c"
+        "imu_temp_control_task.h": "c",
+        "seasky_protocol.h": "c",
+        "crc8.h": "c",
+        "crc.h": "c",
+        "master_process.h": "c",
+        "stm32f4xx.h": "c",
+        "usbd_cdc_if.h": "c",
+        "ares_protocol.h": "c"
     }
 }
