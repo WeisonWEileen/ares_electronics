@@ -149,7 +149,7 @@ void rc_get_protocol_info(uint8_t *rx_buf, uint8_t *rx_data)
     {
         if (Verify_CRC16_Check_Sum(rx_buf,        RC_PROTOCO_DATA_LEGNTH))      // 第二关,crcsum       
         {
-            memcpy(rx_data + 1, rx_buf + 1, 4);
+            memcpy(rx_data + 1, rx_buf + 1, 4*sizeof(float));
         }
     }
 }

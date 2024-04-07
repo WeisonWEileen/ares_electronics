@@ -56,7 +56,7 @@
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN PFP */
-
+void USB_State_IRQHandler(USBD_HandleTypeDef *pdev);
 /* USER CODE END PFP */
 
 /*

@@ -6,7 +6,7 @@
 
 #define PROTOCOL_CMD_ID 0X5A // the master machine to the MCU is 0X5A
 #define OFFSET_BYTE 8		 // 除数据段外，其他部分所占字节数
-#define RC_PROTOCO_DATA_LEGNTH 7
+#define RC_PROTOCO_DATA_LEGNTH 19 // 整个数据帧长度
 
 
 #define EXTRACT_CRC16(low,high) //便于提取16位校验码
@@ -29,10 +29,10 @@
 typedef struct
 {
 	uint8_t header;
-	uint8_t chasis_motor1;
-	uint8_t chasis_motor2;
-	uint8_t chasis_motor3;
-	uint8_t chasis_motor4;
+	float chasis_motor1;
+	float chasis_motor2;
+	float chasis_motor3;
+	float chasis_motor4;
 	uint16_t checksum;
 } rc_protocol_struct ;
 #pragma pack()
