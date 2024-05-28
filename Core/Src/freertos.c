@@ -136,9 +136,10 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(motor_ang_task, MotorTask, osPriorityAboveNormal, 0, 128);
   motor_run_TaskHandle = osThreadCreate(osThread(motor_ang_task), NULL);
 
-  /* definition and creation of imu_read_Task */
-  osThreadDef(imu_read_temp_Task, Imu_read_temp_Task, osPriorityHigh, 0, 128 * 4);
-  imu_read_write_TaskHandle = osThreadCreate(osThread(imu_read_temp_Task), NULL);
+  // BMI088 read
+  // /* definition and creation of imu_read_Task */
+  // osThreadDef(imu_read_temp_Task, Imu_read_temp_Task, osPriorityHigh, 0, 128 * 4);
+  // imu_read_write_TaskHandle = osThreadCreate(osThread(imu_read_temp_Task), NULL);
 
   /* definition and creation of imu_read_Task */
   // osThreadDef(imu_read_Task, Imu_read_temp_Task, osPriorityAboveNormal, 0, 128);
@@ -152,9 +153,11 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(pwm_led, PWM_led_Task, osPriorityAboveNormal, 0, 128);
   pwm_led_TaskHandle = osThreadCreate(osThread(pwm_led), NULL);
 
+ 
+  //ekf姿态解算
   /* definition and creation of LED_PWM_Task */
-  osThreadDef(ins_task, StartINSTASK, osPriorityHigh, 0, 128 * 8);
-  ins_task_TaskHandle = osThreadCreate(osThread(ins_task), NULL);
+  // osThreadDef(ins_task, StartINSTASK, osPriorityHigh, 0, 128 * 8);
+  // ins_task_TaskHandle = osThreadCreate(osThread(ins_task), NULL);
 
   /* definition and creation of LED_PWM_Task */
   // osThreadDef(pwm_buzzer, PWM_buzzer_Task, osPriorityNormal, 0, 128);

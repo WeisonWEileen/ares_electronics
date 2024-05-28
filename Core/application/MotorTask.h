@@ -5,7 +5,7 @@
 #include "pid.h"
 
 #define PI 3.14159265358979f
-#define rpmCoeff 2.0f
+#define rpmCoeff 0.5f
 
 extern bool_t motor_flag;
 extern fp32 norm_rad_format(fp32 rad);

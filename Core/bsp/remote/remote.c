@@ -62,8 +62,8 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
 
 void sbus_to_chasisvxyz(void)
 {
-    chassis_vxyz.vx  = 16 * (sbus.ch[3] - SBUS3_DEFAULT);
+    chassis_vxyz.vx  = -16 * (sbus.ch[3] - SBUS3_DEFAULT);
     chassis_vxyz.vy =  16 * (sbus.ch[1] - SBUS1_DEFAULT);
-    chassis_vxyz.wz =  16 * (sbus.ch[0] - SBUS0_DEFAULT);
+    chassis_vxyz.wz =  5 * (sbus.ch[0] - SBUS0_DEFAULT);
 }
 

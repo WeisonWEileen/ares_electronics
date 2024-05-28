@@ -11,10 +11,10 @@ struct SBUS_t
 extern void SBUS_IT_Open(void);
 extern void sbus_to_chasisvxyz(void);
 
-#define SBUS0_DEFAULT  1000
-#define SBUS1_DEFAULT  1000
+#define SBUS0_DEFAULT  1024
+#define SBUS1_DEFAULT  1024
 #define SBUS2_DEFAULT  1024
-#define SBUS3_DEFAULT  1000
+#define SBUS3_DEFAULT  1024
 #define SBUS4_DEFAULT  1024
 #define SBUS5_DEFAULT  1024
 #define SBUS6_DEFAULT  1695

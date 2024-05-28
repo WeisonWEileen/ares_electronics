@@ -6,6 +6,7 @@
 #include "remote.h"
 #include "ares_protocol.h"
 #include "ins_task.h"
+#include "usbd_def.h"
 
 
 motor_run_data_t motor_3508[4]; // 电机驱动电机运动的数据
@@ -14,12 +15,12 @@ chassis_move_t chassis_vxyz;
 extern rc_protocol_struct usb_rx;
 extern INS_t INS;
 
-#include "usbd_def.h"
 extern USBD_HandleTypeDef hUsbDeviceFS;
+extern uint8_t sbus_connect_flag;
 
 // static uint8_t
 // static uint16_t last_totol_yaw = 0;
-static uint16_t num_circle = 0;
+// static uint16_t num_circle = 0;
 // uint8_t motor_flag = 1;
 // extern void sbus_to_rpm(void);
 
@@ -35,71 +36,67 @@ void MotorTask(void const *argument)
     // motor_3508[0].pid.PID_reset(&motor_3508[0].pid, 6, 0.01, 0.1);
     // 防止开始前已经有can累计
     // motor_3508[0].accumAngle = 0;
+    motor_3508[0].desireRpm = 0;
+    motor_3508[1].desireRpm = 0;
+    motor_3508[2].desireRpm = 0;
     while (1)
     {
-        // sbus_to_chasisvxyz();      遥控器的接收
-        // chasisvxzy_to_desireRpm(); 底盘运动学解算
-        if ( (&hUsbDeviceFS)->dev_state == USBD_STATE_CONFIGURED)  // USB是否正常连接
+        // ——————————————
+        // 直接遥控器部分
+        sbus_to_chasisvxyz();      //遥控器的接收
+        chasisvxzy_to_desireRpm(); //底盘运动学解算
+        
+        // motor_3508[0].desireRpm = 2000;
+        // motor_3508[1].desireRpm = 2000;
+        // motor_3508[2].desireRpm = 2000;
+
+        for (int i = 0; i < 3; i++)
         {
-            // motor_3508[1].desireRpm = 1000;
-            // motor_3508[2].desireRpm = 1000;
-            // motor_3508[0].desireRpm = 1000;
-            // motor_3508[3].desireRpm = 1000;
-
-
-            motor_3508[0].desireRpm = usb_rx.chasis_motor1;
-            motor_3508[1].desireRpm = usb_rx.chasis_motor2;
-            motor_3508[2].desireRpm = usb_rx.chasis_motor3;
-            motor_3508[3].desireRpm = usb_rx.chasis_motor4;
-
-            // if(&INS != NULL){
-            // if (INS.YawTotalAngle - num_circle * 90 > 60)
-            // {
-            //     motor_flag = 0;
-            //     // }
-            // }
-            // if (motor_flag)
-            // {
-            //     motor_3508[0].desireRpm = -1500;
-            //     motor_3508[1].desireRpm = -1500;
-            //     motor_3508[2].desireRpm = -1500;
-            //     motor_3508[3].desireRpm = -1500;
-            // }
-            // else
-            // {
-            //     motor_3508[1].pid.Output = 0;
-            //     motor_3508[0].pid.Output = 0;
-            //     motor_3508[2].pid.Output = 0;
-            //     motor_3508[3].pid.Output = 0;
-            // }
-            for (int i = 0; i < 4; i++)
-            {
-                PID_Calculate(&motor_3508[i].pid, motor_3508[i].realRpm, motor_3508[i].desireRpm);
-            }
-
-            // if (!motor_flag){
-            //     motor_3508[1].pid.Output = 0;
-            //     motor_3508[0].pid.Output = 0;
-            //     motor_3508[2].pid.Output = 0;
-            //     motor_3508[3].pid.Output = 0;
-            // }
-
-            CAN_cmd_chassis(motor_3508[0].pid.Output, motor_3508[1].pid.Output, motor_3508[2].pid.Output, motor_3508[3].pid.Output);
+            PID_Calculate(&motor_3508[i].pid, motor_3508[i].realRpm, motor_3508[i].desireRpm);
         }
-        else{
-            motor_3508[0].desireRpm = 0;
-            motor_3508[1].desireRpm = 0;
-            motor_3508[2].desireRpm = 0;
-            motor_3508[3].desireRpm = 0;
+
+        if (sbus_connect_flag){
+            CAN_cmd_chassis(motor_3508[0].pid.Output, motor_3508[1].pid.Output, motor_3508[2].pid.Output,0);
         }
+        
+
+
+
+        // ---------------------------
+        // --------------------------
+
+
+        //上位机部分 
+        // if ( (&hUsbDeviceFS)->dev_state == USBD_STATE_CONFIGURED)  // 检测USB是否正常连接
+        // {
+        //     //四轮全向轮 上位机 usb
+        //     motor_3508[0].desireRpm = usb_rx.chasis_motor1;
+        //     motor_3508[1].desireRpm = usb_rx.chasis_motor2;
+        //     motor_3508[2].desireRpm = usb_rx.chasis_motor3;
+        //     motor_3508[3].desireRpm = usb_rx.chasis_motor4;
+
+        //     for (int i = 0; i < 4; i++)
+        //     {
+        //         PID_Calculate(&motor_3508[i].pid, motor_3508[i].realRpm, motor_3508[i].desireRpm);
+        //     }
+
+        //     // if (!motor_flag){
+        //     //     motor_3508[1].pid.Output = 0;
+        //     //     motor_3508[0].pid.Output = 0;
+        //     //     motor_3508[2].pid.Output = 0;
+        //     //     motor_3508[3].pid.Output = 0;
+        //     // }
+
+        //     CAN_cmd_chassis(motor_3508[0].pid.Output, motor_3508[1].pid.Output, motor_3508[2].pid.Output, motor_3508[3].pid.Output);
+        // }
+        // else{
+        //     motor_3508[0].desireRpm = 0;
+        //     motor_3508[1].desireRpm = 0;
+        //     motor_3508[2].desireRpm = 0;
+        //     motor_3508[3].desireRpm = 0;
+        // }
         vTaskDelay(2);
 
-        // // 双环pid，先算外环的角度的输出，@to do没调明白
-        // PID_Calculate(&motor_3508[0].ang_pid, motor_3508[0].accumAngle, motor_3508[0].desireAngle);
-        // // 再算内环的电流的输出
-        // PID_Calculate(&motor_3508[0].pid, motor_3508[0].realRpm, motor_3508[0].ang_pid.Output);
-        // CAN_cmd_chassis(motor_3508[0].pid.Output, 0, 0, 0);
-        // vTaskDelay(1);
     }
 }
 
@@ -136,10 +133,19 @@ void motor_data_init(void)
 
 void chasisvxzy_to_desireRpm(void)
 {
-    motor_3508[0].desireRpm = (-chassis_vxyz.vx + chassis_vxyz.vy + chassis_vxyz.wz) * rpmCoeff;
-    motor_3508[1].desireRpm = -(chassis_vxyz.vx + chassis_vxyz.vy - chassis_vxyz.wz) * rpmCoeff;
-    motor_3508[2].desireRpm = -(-chassis_vxyz.vx + chassis_vxyz.vy - chassis_vxyz.wz) * rpmCoeff;
-    motor_3508[3].desireRpm = (chassis_vxyz.vx + chassis_vxyz.vy + chassis_vxyz.wz) * rpmCoeff;
+    //四轮麦轮底盘
+    // motor_3508[0].desireRpm = (-chassis_vxyz.vx + chassis_vxyz.vy + chassis_vxyz.wz) * rpmCoeff;
+    // motor_3508[1].desireRpm = -(chassis_vxyz.vx + chassis_vxyz.vy - chassis_vxyz.wz) * rpmCoeff;
+    // motor_3508[2].desireRpm = -(-chassis_vxyz.vx + chassis_vxyz.vy - chassis_vxyz.wz) * rpmCoeff;
+    // motor_3508[3].desireRpm = (chassis_vxyz.vx + chassis_vxyz.vy + chassis_vxyz.wz) * rpmCoeff;
+
+    //这是三轮全向轮底盘
+    // 0对应左上角motor
+    // 1对应右上角motor
+    // 2对应的是中心motor 
+    motor_3508[0].desireRpm = (chassis_vxyz.vx + chassis_vxyz.vy + chassis_vxyz.wz) * rpmCoeff;
+    motor_3508[1].desireRpm = (-chassis_vxyz.vx - chassis_vxyz.vy + chassis_vxyz.wz) * rpmCoeff;
+    motor_3508[2].desireRpm = (-1.414 *chassis_vxyz.vx + chassis_vxyz.wz) * rpmCoeff;
 }
 
 /**
