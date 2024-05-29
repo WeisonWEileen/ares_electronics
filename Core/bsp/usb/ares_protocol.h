@@ -23,7 +23,6 @@
 // 	uint16_t frame_tail;   // 帧尾CRC校验1
 // } protocol_rm_struct;
 
-
 //注意，gcc-arm-none-eabi不支持__packed__关键字
 #pragma pack(1)
 typedef struct
@@ -33,6 +32,9 @@ typedef struct
 	float chasis_motor2;
 	float chasis_motor3;
 	float chasis_motor4;
+
+	float 云台电机;
+	float 小米电机;
 	uint16_t checksum;
 } rc_protocol_struct ;
 #pragma pack()
@@ -54,8 +56,5 @@ uint16_t get_protocol_info(uint8_t *rx_buf,			 // 接收到的原始数据
 void rc_get_protocol_info(uint8_t *rx_buf, uint8_t *rx_data);
 
 // static uint8_t rc_check_head_crcsum(rc_protocol_struct *pro, uint8_t *rx_buf);
-
-
-
 
 #endif

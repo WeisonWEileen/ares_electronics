@@ -46,13 +46,10 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
             sbus.ch[14] = ((sbus_rx_buf[21] << 6) + (sbus_rx_buf[20] >> 2)) & 0x07ff;
             sbus.ch[15] = ((sbus_rx_buf[22] << 3) + (sbus_rx_buf[21] >> 5)) & 0x07ff;
 
-
-
-
-            if (sbus_rx_buf[21] != 0x00)
-                connect_flag = 0;
-            else
+            if (sbus_rx_buf[23] == 0x00)
                 connect_flag = 1;
+            else
+                connect_flag = 0;
 
             sbus_rx_sta = 0; // 准备下一次接收
         }

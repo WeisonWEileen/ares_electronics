@@ -16,7 +16,7 @@ extern rc_protocol_struct usb_rx;
 extern INS_t INS;
 
 extern USBD_HandleTypeDef hUsbDeviceFS;
-extern uint8_t sbus_connect_flag;
+extern uint8_t connect_flag;
 
 // static uint8_t
 // static uint16_t last_totol_yaw = 0;
@@ -36,9 +36,9 @@ void MotorTask(void const *argument)
     // motor_3508[0].pid.PID_reset(&motor_3508[0].pid, 6, 0.01, 0.1);
     // 防止开始前已经有can累计
     // motor_3508[0].accumAngle = 0;
-    motor_3508[0].desireRpm = 0;
-    motor_3508[1].desireRpm = 0;
-    motor_3508[2].desireRpm = 0;
+    // motor_3508[0].desireRpm = 0;
+    // motor_3508[1].desireRpm = 0;
+    // motor_3508[2].desireRpm = 0;
     while (1)
     {
         // ——————————————
@@ -55,10 +55,11 @@ void MotorTask(void const *argument)
             PID_Calculate(&motor_3508[i].pid, motor_3508[i].realRpm, motor_3508[i].desireRpm);
         }
 
-        if (sbus_connect_flag){
+        if( connect_flag ){
             CAN_cmd_chassis(motor_3508[0].pid.Output, motor_3508[1].pid.Output, motor_3508[2].pid.Output,0);
         }
-        
+
+
 
 
 
@@ -133,18 +134,18 @@ void motor_data_init(void)
 
 void chasisvxzy_to_desireRpm(void)
 {
-    //四轮麦轮底盘
+    // 四轮麦轮底盘
     // motor_3508[0].desireRpm = (-chassis_vxyz.vx + chassis_vxyz.vy + chassis_vxyz.wz) * rpmCoeff;
     // motor_3508[1].desireRpm = -(chassis_vxyz.vx + chassis_vxyz.vy - chassis_vxyz.wz) * rpmCoeff;
     // motor_3508[2].desireRpm = -(-chassis_vxyz.vx + chassis_vxyz.vy - chassis_vxyz.wz) * rpmCoeff;
     // motor_3508[3].desireRpm = (chassis_vxyz.vx + chassis_vxyz.vy + chassis_vxyz.wz) * rpmCoeff;
 
-    //这是三轮全向轮底盘
+    // 这是三轮全向轮底盘
     // 0对应左上角motor
     // 1对应右上角motor
     // 2对应的是中心motor 
     motor_3508[0].desireRpm = (chassis_vxyz.vx + chassis_vxyz.vy + chassis_vxyz.wz) * rpmCoeff;
-    motor_3508[1].desireRpm = (-chassis_vxyz.vx - chassis_vxyz.vy + chassis_vxyz.wz) * rpmCoeff;
+    motor_3508[1].desireRpm = (chassis_vxyz.vx - chassis_vxyz.vy + chassis_vxyz.wz) * rpmCoeff;
     motor_3508[2].desireRpm = (-1.414 *chassis_vxyz.vx + chassis_vxyz.wz) * rpmCoeff;
 }
 
