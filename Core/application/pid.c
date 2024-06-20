@@ -178,12 +178,14 @@ void f_Derivative_On_Measurement(PID_TypeDef *pid)
     pid->Dout = pid->Kd * (pid->Last_Measure - pid->Measure);
 }
 
-void f_Derivative_Filter(PID_TypeDef *pid)   //@to do 这低通滤波什么回事，直接乘一个Coefficient？？
+void f_Derivative_Filter(PID_TypeDef *pid)   //weison:@to do 这低通滤波什么回事，直接乘一个Coefficient？？
+//好像是一个前向差分的方法
 {
     pid->Dout = pid->Dout * pid->Derivative_Filtering_Coefficient +
                 pid->Last_Dout * (1 - pid->Derivative_Filtering_Coefficient);
 }
 
+//weison: 简单加权？
 void f_Output_Filter(PID_TypeDef *pid)
 {
     pid->Output = pid->Output * pid->Output_Filtering_Coefficient +
